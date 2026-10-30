@@ -1,114 +1,138 @@
-# Sistema de Gestão e Análise de Marketing Digital
-**Projeto Integrador Full Stack — Modernização de Sistema Legado (2º Semestre de 2026)**
+# Projeto Integrador Full Stack — Gestão e Análise de Marketing Digital
 
 * **Instituição:** ESEG — Escola Superior de Engenharia e Gestão
-* **Curso:** Engenharia de Computação — Programação Web
+* **Curso:** Engenharia de Computação — Programação Web (2º Semestre de 2026)
 * **Estudante:** Eduardo Marques Fadini
+* **Status do Projeto:** 1ª Entrega (Fases 1–4) ✅ | 2ª Entrega (Fases 5–8) ✅
 
 ---
 
-## 1. Sobre o Projeto
+## 1. Visão Geral do Projeto
 
-Este projeto consiste na análise crítica, reengenharia de dados e modernização de uma base legada de Marketing Digital (`18_marketing_digital.xlsx`, composta por 31.314 registros distribuídos entre 2024 e 2025) para uma aplicação web transacional e analítica robusta.
-
-O objetivo central é substituir controles baseados em planilhas desnormalizadas por uma arquitetura orientada a objetos e relacional íntegra (3ª Forma Normal), eliminando redundâncias, padronizando máquinas de estado (`Status`), automatizando cálculos financeiros/métricas com precisão (`BigDecimal`) e implementando controle de acesso baseado em perfis no servidor.
+Aplicação web desenvolvida em **Java com Spring Boot** para modernização de uma base de dados legada de marketing digital (`18_marketing_digital.xlsx`, composta por 31.314 registros distribuídos entre 2024 e 2025). O sistema elimina redundâncias estruturais através da normalização na **3ª Forma Normal (3FN)**, substitui colunas calculadas fixas por métodos de domínio dinâmicos com precisão `BigDecimal`, padroniza o controle de ciclo de vida das entidades via máquina de estados (`Status`) e implementa regras de negócio financeiras e temporais com persistência relacional real.
 
 ---
 
 ## 2. Tecnologias Utilizadas
 
-* **Linguagem:** Java 17+
-* **Framework Backend:** Spring Boot 3 (Spring Web MVC, Spring Data JPA, Validation)
-* **Segurança:** Spring Security (Autenticação e Autorização baseada em perfis com BCrypt)
-* **Persistência e Banco de Dados:** JPA / Hibernate + Banco de Dados Relacional SQL
-* **Frontend / Template Engine:** HTML5, CSS3, Bootstrap 5 e Thymeleaf
-* **Modelagem:** Astah UML & DBML / SQL DDL
+* **Linguagem:** Java 21
+* **Framework Backend:** Spring Boot 3.3.5 (`Spring Web / MVC`, `Spring Data JPA`, `Bean Validation`)
+* **ORM / Persistência:** Hibernate / Jakarta Persistence (JPA)
+* **Banco de Dados Relacional:** H2 Database (configurado em modo de persistência física em disco `./data/marketing_db`) e suporte a PostgreSQL
+* **Template Engine:** Thymeleaf + Bootstrap 5
+* **Controle de Versão e Build:** Git & Apache Maven
 
 ---
 
-## 3. Estrutura do Repositório
+## 3. Arquitetura e Organização do Projeto (Fase 05)
+
+O código-fonte segue a arquitetura em camadas no pacote base `br.edu.eseg.marketing`:
 
 ```text
-├── docs/
-│   ├── Relatorio_Tecnico_Entrega1.pdf   # Relatório técnico completo da 1ª Entrega
-│   ├── modelo-legado.png                # Estrutura original da base legada (Antes)
-│   ├── diagrama-classes-uml.png         # Diagrama de Classes UML evoluído (Fase 3)
-│   ├── modelo-relacional-der.png        # Diagrama Entidade-Relacionamento SQL (Fase 4)
-│   └── modelagem.asta                   # Arquivo fonte da modelagem no Astah
+meu-projeto-marketing/
+├── docs/                                # Artefatos de modelagem, diagramas UML/DER e relatório técnico
+│   ├── Relatorio_Tecnico_Entrega1.pdf
+│   ├── diagrama-classes-uml.png
+│   ├── modelo-relacional-der.png
+│   ├── modelo-legado.png
+│   └── modelagem.asta
 ├── sql/
-│   └── schema.sql                       # Script DDL com tabelas, PKs, FKs, CHECKs e Índices
-└── README.md                            # Documentação principal do repositório
+│   └── schema.sql                       # Script DDL do Modelo Relacional Evoluído
+├── src/
+│   ├── main/
+│   │   ├── java/br/edu/eseg/marketing/
+│   │   │   ├── config/                  # DataInitializer (migração automática do .xlsx legado)
+│   │   │   ├── controller/              # Controllers Spring MVC e GlobalExceptionHandler
+│   │   │   ├── domain/                  # Entidades JPA, @MappedSuperclass, @Embeddable e Enums
+│   │   │   ├── exception/               # Exceções de regra de negócio e recursos não encontrados
+│   │   │   ├── repository/              # Interfaces Spring Data JPA com consultas customizadas
+│   │   │   ├── service/                 # Regras de negócio, validações, transições e CRUD
+│   │   │   └── MarketingDigitalApplication.java
+│   │   └── resources/
+│   │       ├── static/css/              # Folhas de estilo
+│   │       ├── templates/               # Templates dinâmicos Thymeleaf
+│   │       ├── 18_marketing_digital.xlsx # Base de dados legada para migração automatizada
+│   │       └── application.properties   # Configuração da unidade de persistência e servidor
+│   └── test/                            # Testes automatizados JUnit 5
+├── .gitignore
+├── pom.xml
+└── README.md
 ```
 
 ---
 
-## 4. Cronograma e Status das Entregas
+## 4. Instruções de Instalação, Configuração e Execução
 
-- [x] **1ª Entrega (23/10/2026) — Fases 1 a 4:** Diagnóstico do legado, matriz de rastreabilidade de requisitos, diagrama de classes UML, modelo relacional legado vs. proposto (DER e SQL) e justificativas técnicas.
-- [ ] **2ª Entrega (06/11/2026) — Fases 5 a 8:** Projeto Spring Boot executável, banco de dados configurado, mapeamento JPA, Services, Controllers e operações CRUD persistidas.
-- [ ] **3ª Entrega (13/11/2026) — Fases 9 a 10:** Autenticação e autorização com Spring Security (perfis distintos) e interface responsiva integrada com Thymeleaf e Bootstrap.
-- [ ] **4ª Entrega (20/11/2026) — Fases 11 a 13:** Integração full stack completa, testes automatizados (JUnit), evidências de validação e documentação final.
+### 4.1. Pré-requisitos
+* **JDK 21** instalado e configurado no `PATH`.
+* **Maven 3.9+** (ou utilização do Maven embutido na IDE IntelliJ IDEA / VS Code).
 
----
-
-## 5. Resumo da 1ª Entrega (Fases 1 a 4)
-
-### 5.1. Diagnóstico Crítico da Base Legada (Fase 2)
-
-A auditoria realizada sobre a planilha original `18_marketing_digital.xlsx` identificou 6 problemas estruturais graves:
-
-1. **Desnormalização Severa (Violação da 2FN e 3FN):** A aba `desempenho_diario` (24.910 linhas) duplicava chaves estrangeiras transitivas (`id_conta`, `id_campanha`) e repetia 10 colunas descritivas pertencentes a `campanhas`, `anuncios` e `publicos` (`canal`, `objetivo`, `formato`, `faixa_etaria`, `genero`, `cidade`, `estado`, `regiao`). A aba `funil_mensal` também duplicava `canal`.
-2. **Persistência de Colunas Calculadas e Imprecisão Numérica:** Indicadores derivados (`ctr`, `cpc`, `taxa_conversao`, `roas`, `taxa_clique`, `taxa_lead`, `taxa_venda_por_lead`) eram salvos estaticamente com erros de ponto flutuante (ex: `ctr = 0.008800000000000001`), gerando risco de inconsistência caso os dados brutos fossem atualizados.
-3. **Fragmentação Temporal:** Datas decompostas manualmente em colunas inteiras (`ano`, `mes`, `trimestre`) e armazenadas como números seriais do Excel (`45292`).
-4. **Inconsistência Semântica em Campos de Status:** Nomenclaturas divergentes entre abas para estados equivalentes (`Ativa` vs `Ativo`, `Encerrada` vs `Finalizado`, `Inativa`, `Arquivada`) e ausência de validação de transições.
-5. **Repetição de Estruturas Geográficas:** O trio `cidade`, `estado` e `regiao` repetia-se em `contas`, `publicos` e `desempenho_diario`.
-6. **Ausência de Segurança e Integridade Relacional:** Inexistência de controle de usuários/perfis, chaves estrangeiras ativas ou restrições de domínio (`CHECK` / `NOT NULL`).
-
----
-
-### 5.2. Matriz de Rastreabilidade de Requisitos (Fase 1)
-
-| ID | Requisito Original (Legado) | Problema / Lacuna | Requisito Revisado ou Novo | Justificativa | Implementação (Spring / JPA / Thymeleaf) | Teste / Evidência |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **RF01** | Registros de Contas, Campanhas e Anúncios mantidos em abas separadas sem vínculo forçado. | Falta de integridade referencial; possibilidade de criar anúncios para campanhas inexistentes. | **[Revisado]** CRUD completo de `Campanha` e `Anuncio` com integridade relacional obrigatória às entidades `Conta` e `PublicoAlvo`. | Garante consistência dos dados persistidos e navegação segura entre entidades. | Entidades JPA (`@ManyToOne`, `@OneToMany`), `Repositories`, `Controllers` MVC e formulários Thymeleaf com Bootstrap. | Teste de persistência validando criação/edição e bloqueio de exclusão de registros pais com dependências. |
-| **RF02** | Campos de status em texto livre (`Ativa`, `Ativo`, `Encerrada`, `Finalizado`). | Nomenclaturas divergentes entre abas e ausência de regra de transição de estados. | **[Revisado]** Padronização via enum `Status` e validação de transições válidas no método `alterarStatus()`. | Evita estados ilegais no ciclo de vida da campanha (ex: `ENCERRADO` voltar para `ATIVO`). | Enum `Status` mapeado com `@Enumerated(EnumType.STRING)` e validação de negócio na entidade/serviço. | Teste unitário JUnit comprovando o bloqueio de transição inválida com lançamento de exceção. |
-| **RF03** | Colunas fixas para `ctr`, `roas`, `taxa_conversao` e decomposição manual de datas (`ano`, `mes`, `trimestre`). | Erros de precisão decimal e inconsistência quando métricas brutas são atualizadas. | **[Revisado]** Cálculo dinâmico de indicadores em tempo de execução com `BigDecimal` e uso de `LocalDate`. | Elimina redundância de colunas calculadas (3FN) e assegura exatidão matemática. | Métodos `calcularCTR()`, `calcularROAS()`, `calcularTaxaConversao()` e `calcularTaxaAbertura()` nas classes de domínio. | Teste unitário validando o cálculo exato e o tratamento de divisão por zero quando `impressoes = 0`. |
-| **RF04** | Registro de `desempenho_diario` repetindo 10 colunas de campanha, conta e público. | Redundância em 24.910 linhas e alto risco de divergência cadastral. | **[Revisado]** Normalização de `DesempenhoDiario` mantendo apenas o vínculo relacional com `Anuncio` e `PublicoAlvo`. | Aplica a 3ª Forma Normal (3FN), reduzindo o tamanho da base e garantindo fonte única da verdade. | Classe `DesempenhoDiario extends MetricasFunil` ligada a `Anuncio` e `PublicoAlvo`. | Consulta JPA com `JOIN` exibindo o relatório diário completo na interface Thymeleaf sem colunas duplicadas. |
-| **RF05** | *(Inexistente no legado)* Acompanhamento de limite de orçamento da campanha. | O legado guarda `orcamento_planejado`, mas não alerta quando o custo real supera esse valor. | **[Novo]** Alerta de estouro de orçamento e bloqueio de ativação de novos anúncios quando o custo acumulado atingir o `orcamentoPlanejado`. | Agrega controle financeiro real ao processo de gestão de campanhas. | Regra na camada `Service` somando os custos da campanha + alerta visual Bootstrap no painel Thymeleaf. | Teste automatizado simulando campanha com custo acima do planejado e verificando o bloqueio. |
-| **RF06** | *(Inexistente no legado)* Controle de acesso por perfil de usuário. | Qualquer pessoa podia editar dados financeiros ou apagar campanhas na planilha. | **[Novo]** Autenticação e autorização com perfis distintos (`ADMIN`, `GESTOR_MARKETING`, `ANALISTA`). | Protege operações sensíveis no servidor (`ANALISTA` apenas consulta; `GESTOR_MARKETING` gere campanhas; `ADMIN` gere contas e usuários). | Spring Security, `BCryptPasswordEncoder`, controle de rotas e anotações de segurança nos Controllers. | Teste de integração HTTP comprovando retorno `403 Forbidden` para usuário sem permissão. |
-
----
-
-### 5.3. Modelagem Orientada a Objetos — Diagrama de Classes (Fase 3)
-
-O modelo de domínio foi refatorado aplicando herança (`MetricasFunil` como `@MappedSuperclass`), composição de objetos de valor (`Localizacao` como `@Embeddable`), padronização com Enums (`Status` e `Perfil`) e métodos ricos para cálculo de indicadores e validação de estados:
-
-![Diagrama de Classes UML](docs/diagrama-classes-uml.png)
-
----
-
-### 5.4. Evolução do Modelo Relacional: Legado vs. Evoluído (Fase 4)
-
-#### A. Estrutura Legada (Antes)
-![Modelo Legado](docs/modelo-legado.png)
-
-#### B. Modelo Relacional Evoluído — DER (Depois)
-![Modelo Relacional DER](docs/modelo-relacional-der.png)
-
-* O script SQL completo de criação do banco de dados evoluído encontra-se disponível em [`sql/schema.sql`](sql/schema.sql).
-* O relatório técnico detalhado com todas as justificativas e estratégias de migração encontra-se em [`docs/Relatorio_Tecnico_Entrega1.pdf`](docs/Relatorio_Tecnico_Entrega1.pdf).
-
----
-
-## 6. Como Executar o Projeto (A partir da 2ª Entrega)
-
+### 4.2. Passo a Passo para Executar
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_SEU_REPOSITORIO>
+   git clone [https://github.com/SEU-USUARIO/projeto-integrador-marketing-digital.git](https://github.com/SEU-USUARIO/projeto-integrador-marketing-digital.git)
+   cd projeto-integrador-marketing-digital
    ```
-2. Execute o script de banco de dados localizado em `sql/schema.sql` (ou utilize a configuração automática do Spring Boot / Flyway).
-3. Na raiz do projeto, execute via Maven:
+2. Execute a aplicação via Maven ou diretamente pela classe `MarketingDigitalApplication` na IDE:
    ```bash
-   ./mvnw spring-boot:run
+   mvn spring-boot:run
    ```
-4. Acesse a aplicação no navegador em `http://localhost:8080`.
+3. **Migração Automática na Inicialização (`DataInitializer`):**
+   * Na primeira execução, o sistema lê automaticamente o arquivo `src/main/resources/18_marketing_digital.xlsx`, higieniza os dados (convertendo datas seriais do Excel para `LocalDate` e unificando os status divergentes para o enum `Status`) e persiste os **31.314 registros** no banco de dados local (`./data/marketing_db`):
+      * **40** Contas Anunciantes
+      * **160** Campanhas
+      * **560** Anúncios
+      * **220** Públicos-Alvo
+      * **120** Landing Pages
+      * **1.473** Disparos de E-mail Marketing
+      * **3.831** Resumos de Funil
+      * **24.910** Registros de Desempenho Diário (normalizados na 3FN)
+      * **3** Usuários padrão (`admin@eseg.edu.br`, `gestor@eseg.edu.br`, `analista@eseg.edu.br`)
+
+### 4.3. Endereços de Acesso Local
+* **Aplicação Web:** `http://localhost:8081`
+* **Console do Banco de Dados (H2 Console):** `http://localhost:8081/h2-console`
+   * **JDBC URL:** `jdbc:h2:file:./data/marketing_db`
+   * **User Name:** `sa`
+   * **Password:** *(deixar em branco)*
+
+---
+
+## 5. Entregas Técnicas — 2ª Entrega (Fases 5 a 8)
+
+### Fase 06: Persistência com JPA e Mapeamento Objeto-Relacional
+* **Herança (`@MappedSuperclass`):** Superclasse abstrata `MetricasFunil` centralizando `impressoes`, `cliques`, `leads`, `oportunidades`, `vendas`, `data`, `custo` e `receita`, herdada por `ResumoFunil` e `DesempenhoDiario`, com métodos dinâmicos `calcularCTR()` e `calcularROAS()`.
+* **Composição (`@Embeddable` / `@Embedded`):** Value Object `Localizacao` (`cidade`, `estado`, `regiao`) embutido em `Conta` e `PublicoAlvo`.
+* **Repositories JPA:** 9 interfaces `JpaRepository` com consultas `JOIN FETCH` otimizadas e funções de agregação (`COALESCE(SUM(custo), 0)`) para apuração financeira em tempo real.
+
+### Fase 07: Regras de Negócio e Validações (`Service` & `Domain`)
+1. **Máquina de Estados de `Status` (`Campanha.alterarStatus`):** Bloqueia transições inconsistentes — campanhas ou anúncios com status `ENCERRADO` ou `ARQUIVADO` não podem retornar para `ATIVO` ou `PAUSADO`. Alterar uma campanha para `PAUSADO` ou `ENCERRADO` sincroniza automaticamente o status dos anúncios vinculados.
+2. **Controle de Estouro de Orçamento (Requisito Novo - RF05):** Calcula o custo acumulado da campanha e impede a criação ou ativação de novos anúncios caso o gasto atinja ou supere o `orcamentoPlanejado`.
+3. **Consistência Temporal (RNF01):** Valida que `dataFim` nunca seja anterior a `dataInicio`.
+4. **Integridade de Conta Anunciante:** Impede a criação/ativação de campanhas em contas com status `INATIVO` e bloqueia a inativação de contas que possuam campanhas em execução (`ATIVO`).
+5. **Proteção de Exclusão:** Bloqueia a exclusão direta de campanhas com status `ATIVO`.
+
+### Fase 08: Backend, Rotas HTTP e Tratamento de Erros (`Controller`)
+* **`DashboardController` (`GET /`, `GET /dashboard`):** Consolida indicadores globais, total de campanhas com orçamento estourado e listagens recentes.
+* **`CampanhaController` (`/campanhas`):** CRUD completo, visualização detalhada de funil/orçamento (`GET /{id}`), transição controlada de status (`POST /{id}/status`) e exclusão protegida (`POST /{id}/excluir`).
+* **`AnuncioController` (`/anuncios`):** CRUD de criativos integrado à validação de orçamento e status da campanha.
+* **`ContaController` (`/contas`):** Cadastro e edição de contas anunciantes com validação do componente `Localizacao`.
+* **`GlobalExceptionHandler` (`@ControllerAdvice`):** Captura centralizada de `RegraNegocioException` e `RecursoNaoEncontradoException`, convertendo falhas de domínio em feedbacks amigáveis (`RedirectAttributes`) sem expor erros 500 ao usuário.
+
+---
+
+## 6. Modelagem e Documentação — 1ª Entrega (Fases 1 a 4)
+
+Os artefatos completos de diagnóstico da base legada, matriz de rastreabilidade e modelagem estão disponíveis no diretório `docs/` e `sql/`:
+
+* 📄 **[Relatório Técnico Completo](docs/Relatorio_Tecnico_Entrega1.pdf)**
+* 🗄️ **[Script SQL DDL Evoluído](sql/schema.sql)**
+
+### Diagrama de Classes UML (Fase 03)
+![Diagrama de Classes UML](docs/diagrama-classes-uml.png)
+
+### Modelo Relacional Evoluído — DER (Fase 04)
+![Modelo Relacional DER](docs/modelo-relacional-der.png)
+
+### Modelo Legado Original (Fase 02)
+![Modelo Legado](docs/modelo-legado.png)
