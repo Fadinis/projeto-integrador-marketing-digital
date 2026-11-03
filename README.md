@@ -3,13 +3,13 @@
 * **Instituição:** ESEG — Escola Superior de Engenharia e Gestão
 * **Curso:** Engenharia de Computação — Programação Web (2º Semestre de 2026)
 * **Estudante:** Eduardo Marques Fadini
-* **Status do Projeto:** 1ª Entrega (Fases 1–4) ✅ | 2ª Entrega (Fases 5–8) ✅
+* **Status do Projeto:** 1ª Entrega (Fases 1–4) ✅ | 2ª Entrega (Fases 5–8) ✅ | 3ª Entrega (Fases 9–10) ✅
 
 ---
 
 ## 1. Visão Geral do Projeto
 
-Aplicação web desenvolvida em **Java com Spring Boot** para modernização de uma base de dados legada de marketing digital (`18_marketing_digital.xlsx`, composta por 31.314 registros distribuídos entre 2024 e 2025). O sistema elimina redundâncias estruturais através da normalização na **3ª Forma Normal (3FN)**, substitui colunas calculadas fixas por métodos de domínio dinâmicos com precisão `BigDecimal`, padroniza o controle de ciclo de vida das entidades via máquina de estados (`Status`) e implementa regras de negócio financeiras e temporais com persistência relacional real.
+Aplicação web desenvolvida em **Java com Spring Boot** para modernização de uma base de dados legada de marketing digital (`18_marketing_digital.xlsx`, composta por 31.314 registros distribuídos entre 2024 e 2025). O sistema elimina redundâncias estruturais através da normalização na **3ª Forma Normal (3FN)**, substitui colunas calculadas fixas por métodos de domínio dinâmicos com precisão `BigDecimal`, padroniza o controle de ciclo de vida das entidades via máquina de estados (`Status`), implementa regras de negócio financeiras e temporais com persistência relacional real e protege as operações com autenticação e controle de acesso baseado em perfis (**RBAC**).
 
 ---
 
@@ -17,14 +17,15 @@ Aplicação web desenvolvida em **Java com Spring Boot** para modernização de 
 
 * **Linguagem:** Java 21
 * **Framework Backend:** Spring Boot 3.3.5 (`Spring Web / MVC`, `Spring Data JPA`, `Bean Validation`)
+* **Segurança:** Spring Security 6 + `BCryptPasswordEncoder` + `thymeleaf-extras-springsecurity6`
 * **ORM / Persistência:** Hibernate / Jakarta Persistence (JPA)
 * **Banco de Dados Relacional:** H2 Database (configurado em modo de persistência física em disco `./data/marketing_db`) e suporte a PostgreSQL
-* **Template Engine:** Thymeleaf + Bootstrap 5
+* **Frontend / Template Engine:** Thymeleaf + Bootstrap 5.3
 * **Controle de Versão e Build:** Git & Apache Maven
 
 ---
 
-## 3. Arquitetura e Organização do Projeto (Fase 05)
+## 3. Arquitetura e Organização do Projeto
 
 O código-fonte segue a arquitetura em camadas no pacote base `br.edu.eseg.marketing`:
 
@@ -41,16 +42,24 @@ meu-projeto-marketing/
 ├── src/
 │   ├── main/
 │   │   ├── java/br/edu/eseg/marketing/
-│   │   │   ├── config/                  # DataInitializer (migração automática do .xlsx legado)
-│   │   │   ├── controller/              # Controllers Spring MVC e GlobalExceptionHandler
+│   │   │   ├── config/                  # DataInitializer, SecurityConfig e UsuarioDetailsService
+│   │   │   ├── controller/              # Controllers MVC, AuthController e GlobalExceptionHandler
 │   │   │   ├── domain/                  # Entidades JPA, @MappedSuperclass, @Embeddable e Enums
 │   │   │   ├── exception/               # Exceções de regra de negócio e recursos não encontrados
 │   │   │   ├── repository/              # Interfaces Spring Data JPA com consultas customizadas
 │   │   │   ├── service/                 # Regras de negócio, validações, transições e CRUD
 │   │   │   └── MarketingDigitalApplication.java
 │   │   └── resources/
-│   │       ├── static/css/              # Folhas de estilo
-│   │       ├── templates/               # Templates dinâmicos Thymeleaf
+│   │       ├── static/css/              # Folhas de estilo customizadas
+│   │       ├── templates/               # Templates dinâmicos Thymeleaf + Bootstrap 5
+│   │       │   ├── anuncios/            # Listagem e formulário de anúncios
+│   │       │   ├── campanhas/           # Listagem, formulário e painel detalhado de campanha/funil
+│   │       │   ├── contas/              # Listagem e formulário de contas anunciantes
+│   │       │   ├── fragments/           # Barra de navegação reutilizável (navbar.html)
+│   │       │   ├── acesso-negado.html   # Página 403 customizada
+│   │       │   ├── dashboard.html       # Painel analítico principal
+│   │       │   ├── erro.html            # Página de tratamento de erros
+│   │       │   └── login.html           # Tela de autenticação
 │   │       ├── 18_marketing_digital.xlsx # Base de dados legada para migração automatizada
 │   │       └── application.properties   # Configuração da unidade de persistência e servidor
 │   └── test/                            # Testes automatizados JUnit 5
@@ -78,23 +87,29 @@ meu-projeto-marketing/
    mvn spring-boot:run
    ```
 3. **Migração Automática na Inicialização (`DataInitializer`):**
-   * Na primeira execução, o sistema lê automaticamente o arquivo `src/main/resources/18_marketing_digital.xlsx`, higieniza os dados (convertendo datas seriais do Excel para `LocalDate` e unificando os status divergentes para o enum `Status`) e persiste os **31.314 registros** no banco de dados local (`./data/marketing_db`):
-      * **40** Contas Anunciantes
-      * **160** Campanhas
-      * **560** Anúncios
-      * **220** Públicos-Alvo
-      * **120** Landing Pages
-      * **1.473** Disparos de E-mail Marketing
-      * **3.831** Resumos de Funil
-      * **24.910** Registros de Desempenho Diário (normalizados na 3FN)
-      * **3** Usuários padrão (`admin@eseg.edu.br`, `gestor@eseg.edu.br`, `analista@eseg.edu.br`)
+    * Na primeira execução, o sistema lê automaticamente o arquivo `src/main/resources/18_marketing_digital.xlsx`, higieniza os dados (convertendo datas seriais do Excel para `LocalDate` e unificando os status divergentes para o enum `Status`) e persiste os **31.314 registros** no banco de dados local (`./data/marketing_db`):
+        * **40** Contas Anunciantes
+        * **160** Campanhas
+        * **560** Anúncios
+        * **220** Públicos-Alvo
+        * **120** Landing Pages
+        * **1.473** Disparos de E-mail Marketing
+        * **3.831** Resumos de Funil
+        * **24.910** Registros de Desempenho Diário (normalizados na 3FN)
+        * **3** Usuários padrão com senhas criptografadas em `BCrypt`
 
-### 4.3. Endereços de Acesso Local
-* **Aplicação Web:** `http://localhost:8081`
+### 4.3. Endereços de Acesso e Credenciais de Teste (Fase 09)
+* **Aplicação Web (Tela de Login):** `http://localhost:8081/login`
 * **Console do Banco de Dados (H2 Console):** `http://localhost:8081/h2-console`
-   * **JDBC URL:** `jdbc:h2:file:./data/marketing_db`
-   * **User Name:** `sa`
-   * **Password:** *(deixar em branco)*
+    * **JDBC URL:** `jdbc:h2:file:./data/marketing_db`
+    * **User Name:** `sa`
+    * **Password:** *(deixar em branco)*
+
+| Perfil (`Role`) | E-mail (Login) | Senha | Permissões no Sistema |
+| :--- | :--- | :--- | :--- |
+| **`ADMIN`** | `admin@eseg.edu.br` | `admin123` | Acesso total: leitura, criação/edição de Contas, Campanhas, Anúncios e exclusão de registros. |
+| **`GESTOR_MARKETING`** | `gestor@eseg.edu.br` | `gestor123` | Visualização global e criação, edição e transição de status de Campanhas e Anúncios. |
+| **`ANALISTA`** | `analista@eseg.edu.br` | `analista123` | Acesso estritamente analítico (somente leitura `GET` ao Dashboard, Campanhas, Anúncios e Contas). |
 
 ---
 
@@ -121,7 +136,21 @@ meu-projeto-marketing/
 
 ---
 
-## 6. Modelagem e Documentação — 1ª Entrega (Fases 1 a 4)
+## 6. Entregas Técnicas — 3ª Entrega (Fases 9 e 10)
+
+### Fase 09: Autenticação e Autorização com Spring Security
+* **Autenticação Persistida (`UsuarioDetailsService`):** Validação de credenciais diretamente na tabela `usuario` do banco de dados, verificando o atributo `ativo` e carregando o `Perfil` correspondente.
+* **Criptografia de Senhas:** Utilização de `BCryptPasswordEncoder` para armazenamento seguro de hashes de senha.
+* **Controle de Acesso Baseado em Perfis (`SecurityConfig`):** Restrição de rotas por método HTTP e `Role`, protegendo formulários com tokens CSRF e redirecionando acessos não autorizados para a página customizada `/acesso-negado` (HTTP 403).
+
+### Fase 10: Interface Web Dinâmica (Thymeleaf + Bootstrap 5)
+* **Componentização de Layout:** Barra de navegação responsiva (`fragments/navbar.html`) exibindo o e-mail do usuário autenticado, seu perfil ativo (`sec:authentication`) e botão de encerramento de sessão.
+* **Renderização Condicional por Perfil (`sec:authorize`):** Ocultação automática de botões de criação, edição, transição de status e exclusão na interface para perfis sem permissão de escrita (`ANALISTA` / `GESTOR_MARKETING`).
+* **Exibição de Indicadores Dinâmicos e Alertas de Negócio:** Renderização em tempo real do consumo percentual de orçamento com badges de alerta (`ESGOTADO`), além do cálculo dinâmico de **CTR**, **ROAS**, **Taxa de Conversão de Landing Pages** e **Taxa de Abertura de E-mails** diretamente nos templates Thymeleaf.
+
+---
+
+## 7. Modelagem e Documentação — 1ª Entrega (Fases 1 a 4)
 
 Os artefatos completos de diagnóstico da base legada, matriz de rastreabilidade e modelagem estão disponíveis no diretório `docs/` e `sql/`:
 
