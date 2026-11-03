@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -37,9 +38,13 @@ public class DataInitializer {
             LandingPageRepository lpRepo,
             EmailMarketingRepository emailRepo,
             ResumoFunilRepository resumoRepo,
-            DesempenhoDiarioRepository desempenhoRepo) {
+            DesempenhoDiarioRepository desempenhoRepo,
+            PasswordEncoder passwordEncoder) {
 
         return args -> {
+            // Garante que os 3 perfis de acesso existam com senha criptografada em BCrypt
+            garantirUsuariosPadrao(usuarioRepo, passwordEncoder);
+
             // Se ja importou as 40 contas do Excel, nao importa novamente
             if (contaRepo.count() >= 40) {
                 log.info(">>> Base de dados ja contem os dados migrados ({} contas). Pulando importacao.", contaRepo.count());
@@ -58,7 +63,7 @@ public class DataInitializer {
             usuarioRepo.deleteAllInBatch();
 
             // 1. Cria os 3 perfis de utilizadores para o Spring Security (Requisito 2.7)
-            criarUsuariosPadrao(usuarioRepo);
+            garantirUsuariosPadrao(usuarioRepo, passwordEncoder);
 
             ClassPathResource resource = new ClassPathResource("18_marketing_digital.xlsx");
             if (!resource.exists()) {
@@ -252,27 +257,29 @@ public class DataInitializer {
         };
     }
 
-    private void criarUsuariosPadrao(UsuarioRepository usuarioRepo) {
-        Usuario admin = new Usuario();
-        admin.setNome("Administrador ESEG");
-        admin.setEmail("admin@eseg.edu.br");
-        admin.setSenhaHash("{noop}admin123");
-        admin.setPerfil(Perfil.ADMIN);
-        usuarioRepo.save(admin);
+    private void garantirUsuariosPadrao(UsuarioRepository usuarioRepo, PasswordEncoder passwordEncoder) {
+        salvarOuAtualizarUsuario(usuarioRepo, passwordEncoder,
+                "Administrador ESEG", "admin@eseg.edu.br", "admin123", Perfil.ADMIN);
+        salvarOuAtualizarUsuario(usuarioRepo, passwordEncoder,
+                "Gestor de Marketing", "gestor@eseg.edu.br", "gestor123", Perfil.GESTOR_MARKETING);
+        salvarOuAtualizarUsuario(usuarioRepo, passwordEncoder,
+                "Analista de Dados", "analista@eseg.edu.br", "analista123", Perfil.ANALISTA);
+    }
 
-        Usuario gestor = new Usuario();
-        gestor.setNome("Gestor de Marketing");
-        gestor.setEmail("gestor@eseg.edu.br");
-        gestor.setSenhaHash("{noop}gestor123");
-        gestor.setPerfil(Perfil.GESTOR_MARKETING);
-        usuarioRepo.save(gestor);
-
-        Usuario analista = new Usuario();
-        analista.setNome("Analista de Dados");
-        analista.setEmail("analista@eseg.edu.br");
-        analista.setSenhaHash("{noop}analista123");
-        analista.setPerfil(Perfil.ANALISTA);
-        usuarioRepo.save(analista);
+    private void salvarOuAtualizarUsuario(
+            UsuarioRepository usuarioRepo,
+            PasswordEncoder passwordEncoder,
+            String nome,
+            String email,
+            String senhaPura,
+            Perfil perfil) {
+        Usuario u = usuarioRepo.findByEmail(email).orElseGet(Usuario::new);
+        u.setNome(nome);
+        u.setEmail(email);
+        u.setSenhaHash(passwordEncoder.encode(senhaPura));
+        u.setAtivo(true);
+        u.setPerfil(perfil);
+        usuarioRepo.save(u);
     }
 
     // Padroniza os status divergentes da planilha legada (Requisito 2.3)

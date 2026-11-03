@@ -61,16 +61,15 @@
         </dependency>
 
         <!-- Spring Security (Sera ativado na Fase 09 - Autenticacao e Autorizacao) -->
-        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
-        -->
 
         <!-- Testes Automatizados (JUnit 5, Spring Boot Test) -->
         <dependency>
