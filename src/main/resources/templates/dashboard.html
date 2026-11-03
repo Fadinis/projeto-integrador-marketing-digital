@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — Marketing Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0">Visão Geral de Marketing Digital</h3>
+            <p class="text-muted small mb-0">Indicadores consolidados da base relacional normalizada (3FN)</p>
+        </div>
+        <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+            <a th:href="@{/campanhas/nova}" class="btn btn-primary">+ Nova Campanha</a>
+        </div>
+    </div>
+
+    <!-- Cards de Indicadores Principais -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">CONTAS ANUNCIANTES</div>
+                    <h2 class="fw-bold text-primary my-1" th:text="${totalContas}">40</h2>
+                    <a th:href="@{/contas}" class="small text-decoration-none">Ver todas as contas &rarr;</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">CAMPANHAS (ATIVAS / TOTAL)</div>
+                    <h2 class="fw-bold text-success my-1">
+                        <span th:text="${campanhasAtivas}">0</span> / <span th:text="${totalCampanhas}">160</span>
+                    </h2>
+                    <a th:href="@{/campanhas}" class="small text-decoration-none">Gerir campanhas &rarr;</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">CRIATIVOS / ANÚNCIOS</div>
+                    <h2 class="fw-bold text-dark my-1" th:text="${totalAnuncios}">560</h2>
+                    <a th:href="@{/anuncios}" class="small text-decoration-none">Ver anúncios &rarr;</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">ORÇAMENTOS ESTOURADOS</div>
+                    <h2 class="fw-bold text-danger my-1" th:text="${campanhasOrcamentoEstourado}">0</h2>
+                    <span class="small text-muted">Bloqueio automático ativo (RF05)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Campanhas Recentes -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold mb-0">Campanhas Mais Recentes</h6>
+            <a th:href="@{/campanhas}" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small">
+                <tr>
+                    <th>ID</th>
+                    <th>Campanha</th>
+                    <th>Conta</th>
+                    <th>Canal</th>
+                    <th>Período</th>
+                    <th>Orçamento Planejado</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${campanhasRecentes}">
+                    <td th:text="${c.idCampanha}">1</td>
+                    <td class="fw-semibold" th:text="${c.nomeCampanha}">Campanha</td>
+                    <td th:text="${c.conta.nomeConta}">Conta</td>
+                    <td><span class="badge bg-info text-dark" th:text="${c.canal}">Canal</span></td>
+                    <td class="small">
+                        <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> a
+                        <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
+                    </td>
+                    <td>R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'bg-success' : (c.statusCampanha.name() == 'PAUSADO' ? 'bg-warning text-dark' : 'bg-secondary')}"
+                              th:text="${c.statusCampanha}"> STATUS </span>
+                    </td>
+                    <td class="text-end">
+                        <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Landing Pages e E-mail Marketing -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="fw-bold mb-0">Performance de Landing Pages (Amostra)</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light small">
+                        <tr>
+                            <th>Landing Page</th>
+                            <th>Visitas</th>
+                            <th>Conversões</th>
+                            <th>Taxa Conv. (Dinâmica)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lp : ${landingPagesRecentes}">
+                            <td th:text="${lp.nomeLandingPage}">LP</td>
+                            <td th:text="${lp.visitas}">0</td>
+                            <td th:text="${lp.conversoes}">0</td>
+                            <td class="fw-bold text-primary"><span th:text="${lp.calcularTaxaConversao()}">0.00</span>%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="fw-bold mb-0">Disparos de E-mail Marketing (Amostra)</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light small">
+                        <tr>
+                            <th>Conta / Tipo</th>
+                            <th>Envios</th>
+                            <th>Aberturas</th>
+                            <th>Taxa Abertura (Dinâmica)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="em : ${emailsRecentes}">
+                            <td>
+                                <div class="fw-semibold small" th:text="${em.conta.nomeConta}">Conta</div>
+                                <div class="text-muted small" th:text="${em.tipoEmail}">Tipo</div>
+                            </td>
+                            <td th:text="${em.envios}">0</td>
+                            <td th:text="${em.aberturas}">0</td>
+                            <td class="fw-bold text-success"><span th:text="${em.calcularTaxaAbertura()}">0.00</span>%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes da Campanha — Marketing Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container pb-5">
+    <div th:if="${mensagemSucesso}" class="alert alert-success" th:text="${mensagemSucesso}"></div>
+    <div th:if="${mensagemErro}" class="alert alert-danger" th:text="${mensagemErro}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge bg-info text-dark mb-1" th:text="${campanha.canal}">Canal</span>
+            <h3 class="fw-bold mb-0" th:text="${campanha.nomeCampanha}">Nome da Campanha</h3>
+            <p class="text-muted small mb-0">
+                Conta: <strong th:text="${campanha.conta.nomeConta}"></strong> |
+                Período: <span th:text="${#temporals.format(campanha.dataInicio, 'dd/MM/yyyy')}"></span> a
+                <span th:text="${#temporals.format(campanha.dataFim, 'dd/MM/yyyy')}"></span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/campanhas}" class="btn btn-outline-secondary">Voltar</a>
+            <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
+               th:href="@{/campanhas/{id}/editar(id=${campanha.idCampanha})}"
+               class="btn btn-outline-primary">Editar Campanha</a>
+        </div>
+    </div>
+
+    <!-- Painel Financeiro e Maquina de Estados de Status -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">ORÇAMENTO PLANEJADO VS. CUSTO REAL</div>
+                    <h4 class="fw-bold my-2">
+                        R$ <span th:text="${#numbers.formatDecimal(custoAcumulado, 1, 'POINT', 2, 'COMMA')}"></span>
+                        <small class="text-muted fs-6">/ R$ <span th:text="${#numbers.formatDecimal(campanha.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span></small>
+                    </h4>
+                    <div>
+                        Consumo: <strong th:classappend="${orcamentoEstourado ? 'text-danger' : 'text-success'}"
+                                         th:text="${percentualOrcamento + '%'}">0%</strong>
+                        <span th:if="${orcamentoEstourado}" class="badge bg-danger ms-2">ORÇAMENTO ESGOTADO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold">STATUS ATUAL E CLASSIFICAÇÃO</div>
+                    <h4 class="my-2">
+                        <span class="badge"
+                              th:classappend="${campanha.statusCampanha.name() == 'ATIVO' ? 'bg-success' : (campanha.statusCampanha.name() == 'PAUSADO' ? 'bg-warning text-dark' : 'bg-secondary')}"
+                              th:text="${campanha.statusCampanha}">STATUS</span>
+                    </h4>
+                    <div class="small text-muted">
+                        Funil: <strong th:text="${campanha.posicaoFunil}"></strong> |
+                        Objetivo: <strong th:text="${campanha.objetivo}"></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small fw-semibold mb-2">TRANSIÇÃO DE STATUS (REGRA DE DOMÍNIO)</div>
+                    <form th:action="@{/campanhas/{id}/status(id=${campanha.idCampanha})}" method="post" class="d-flex gap-2">
+                        <select name="novoStatus" class="form-select form-select-sm">
+                            <option th:each="st : ${statusOpcoes}"
+                                    th:value="${st}"
+                                    th:text="${st}"
+                                    th:selected="${st == campanha.statusCampanha}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-dark">Aplicar</button>
+                    </form>
+                    <small class="text-muted d-block mt-2">
+                        * Campanhas ENCERRADAS bloqueiam retorno para ATIVO/PAUSADO.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anuncios Vinculados -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold mb-0">Anúncios / Criativos desta Campanha</h6>
+            <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
+               th:href="@{/anuncios/novo(idCampanha=${campanha.idCampanha})}"
+               class="btn btn-sm btn-primary">+ Novo Anúncio nesta Campanha</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do Anúncio</th>
+                    <th>Formato</th>
+                    <th>Teste A/B</th>
+                    <th>Linha Criativa</th>
+                    <th>Nota Qualidade</th>
+                    <th>Status</th>
+                    <th class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="an : ${anuncios}">
+                    <td th:text="${an.idAnuncio}">1</td>
+                    <td class="fw-semibold" th:text="${an.nomeAnuncio}">Anúncio</td>
+                    <td th:text="${an.formato}">Formato</td>
+                    <td><span class="badge bg-light text-dark border" th:text="${an.versaoTesteAb}">A</span></td>
+                    <td th:text="${an.linhaCriativa}">Linha</td>
+                    <td th:text="${an.notaQualidadeCriativo}">8.5</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${an.statusAnuncio.name() == 'ATIVO' ? 'bg-success' : (an.statusAnuncio.name() == 'PAUSADO' ? 'bg-warning text-dark' : 'bg-secondary')}"
+                              th:text="${an.statusAnuncio}">STATUS</span>
+                    </td>
+                    <td class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                        <a th:href="@{/anuncios/{id}/editar(id=${an.idAnuncio})}" class="btn btn-sm btn-outline-primary">Editar</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Resumos de Funil (MetricasFunil com CTR e ROAS Dinamicos) -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h6 class="fw-bold mb-0">Histórico Mensal de Funil (Métricas Herdadas de <code>MetricasFunil</code>)</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle mb-0">
+                <thead class="table-light small">
+                <tr>
+                    <th>Mês Ref.</th>
+                    <th>Impressões</th>
+                    <th>Cliques</th>
+                    <th>Leads</th>
+                    <th>Oportunidades</th>
+                    <th>Vendas</th>
+                    <th>Custo</th>
+                    <th>Receita</th>
+                    <th>CTR (Dinâmico)</th>
+                    <th>ROAS (Dinâmico)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rf : ${resumosFunil}">
+                    <td th:text="${#temporals.format(rf.data, 'MM/yyyy')}">11/2024</td>
+                    <td th:text="${rf.impressoes}">0</td>
+                    <td th:text="${rf.cliques}">0</td>
+                    <td th:text="${rf.leads}">0</td>
+                    <td th:text="${rf.oportunidades}">0</td>
+                    <td th:text="${rf.vendas}">0</td>
+                    <td>R$ <span th:text="${#numbers.formatDecimal(rf.custo, 1, 'POINT', 2, 'COMMA')}"></span></td>
+                    <td>R$ <span th:text="${#numbers.formatDecimal(rf.receita, 1, 'POINT', 2, 'COMMA')}"></span></td>
+                    <td class="fw-bold text-primary"><span th:text="${rf.calcularCTR()}">0.00</span>%</td>
+                    <td class="fw-bold text-success"><span th:text="${rf.calcularROAS()}">0.00</span>x</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
