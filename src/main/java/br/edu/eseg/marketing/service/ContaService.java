@@ -42,11 +42,11 @@ public class ContaService {
     @Transactional
     public Conta salvar(Conta conta) {
         if (conta.getStatusConta() != Status.ATIVO && conta.getStatusConta() != Status.INATIVO) {
-            throw new RegraNegocioException("O statsu de uma Conta deve ser apenas ATIVO ou INATIVO.");
+            throw new RegraNegocioException("O status de uma Conta deve ser apenas ATIVO ou INATIVO.");
         }
 
-        // Regar: Não permite inativar conta se houver campanhas ativas vinculadas
-        if (conta.getIdConta() != null && conta.getStatusConta() != Status.INATIVO) {
+        // Regra: Não permite inativar conta se houver campanhas ativas vinculadas
+        if (conta.getIdConta() != null && conta.getStatusConta() == Status.INATIVO) {
             List<Campanha> campanhasDaConta = campanhaRepository.findByContaIdConta(conta.getIdConta());
             boolean possuiCampanhaAtiva = campanhasDaConta.stream()
                     .anyMatch(c -> c.getStatusCampanha() == Status.ATIVO);
