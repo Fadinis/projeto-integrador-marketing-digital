@@ -155,3 +155,30 @@ A interface foi reformulada com base na paleta **Cyber Marketing & Analytics**, 
 4. **Máquina de Estados de Status:** Validação rigorosa no domínio (`Campanha.alterarStatus()`) que impede estados inconsistentes (ex: transição de `ENCERRADO` para `ATIVO`).
 5. **Requisito Novo RF05 (Controle Orçamentário):** Monitoramento contínuo do gasto real vs. planejado, exibindo barra de progresso visual e bloqueando a ativação de novos anúncios caso o orçamento estoure.
 6. **Requisito Novo RF06 (Segurança e RBAC):** Autenticação segura com senhas criptografadas em BCrypt e proteção multinível no servidor via Spring Security.
+
+
+---
+
+## 8. Modelagem e Documentação Técnica (Fases 1 a 4)
+
+Todos os artefatos de diagnóstico, matriz de rastreabilidade e diagramas arquiteturais estão versionados no repositório:
+
+* 📄 **[Relatório Técnico Completo (PDF)](docs/Relatorio_Tecnico_Entrega1.pdf)**
+* 🗄️ **[Script SQL DDL Oficial (3FN)](sql/schema.sql)**
+* 📐 **[Arquivo Fonte Astah UML (.asta)](docs/modelagem.asta)**
+* 📊 **[Arquivo Fonte DBML (.dbml)](docs/modelagem.dbml)**
+
+### 8.1. Diagrama de Classes UML da Solução (Fase 03)
+Contempla herança via `@MappedSuperclass` (`MetricasFunil`), composição com Value Object `@Embeddable` (`Localizacao`), associações JPA bidirecionais e máquina de estados com o enum `Status`:
+
+![Diagrama de Classes UML](docs/diagrama-classes-uml.png)
+
+### 8.2. Modelo Relacional Evoluído — DER Normalizado (Fase 04)
+Esquema relacional em 3ª Forma Normal (3FN), com chaves primárias sintéticas, integridade referencial por chaves estrangeiras (`FOREIGN KEY`), restrições `CHECK` e índices de performance:
+
+![Modelo Relacional Evoluído - DER](docs/modelo-relacional-der.png)
+
+### 8.3. Modelo Legado Original — Diagnóstico Preliminar (Fase 02)
+Estrutura desnormalizada original da folha de cálculo `18_marketing_digital.xlsx`, evidenciando as redundâncias transitivas, ausência de constraints e repetição desnecessária de atributos:
+
+![Modelo Legado Original](docs/modelo-legado.png)
