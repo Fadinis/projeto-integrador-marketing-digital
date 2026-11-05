@@ -3,10 +3,13 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<!-- SIDEBAR VERTICAL (ESTILO HOCKEYSTACK) -->
+<!-- SIDEBAR VERTICAL (ESTILO SAAS MODERNO) -->
 <aside th:fragment="sidebar(activeTab)" class="app-sidebar">
     <a th:href="@{/dashboard}" class="sidebar-logo" title="Marketing Analytics">
-        <i class="bi bi-graph-up-arrow"></i>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+            <polyline points="16 7 22 7 22 13"></polyline>
+        </svg>
     </a>
 
     <ul class="sidebar-nav">
@@ -38,52 +41,100 @@
     </ul>
 
     <div class="sidebar-footer">
-        <a th:href="@{/dashboard}" class="sidebar-nav-link" title="Configurações">
+        <button type="button" class="sidebar-nav-link" data-bs-toggle="modal" data-bs-target="#modalConfiguracoes" title="Configurações do Sistema">
             <i class="bi bi-gear-fill"></i>
-        </a>
-        <a th:href="@{/dashboard}" class="sidebar-nav-link" title="Documentação">
-            <i class="bi bi-journal-code"></i>
-        </a>
-        <div style="width: 32px; height: 1px; background-color: var(--hs-border); margin: 0.25rem 0;"></div>
+        </button>
+        <div class="sidebar-divider" style="width: 32px; height: 1px; background-color: var(--hs-border); margin: 0.15rem 0;"></div>
         <div class="sidebar-avatar" title="Eduardo Marques Fadini (RA 42721)">
             EF
         </div>
         <form th:action="@{/logout}" method="post" class="m-0">
-            <button type="submit" class="sidebar-nav-link bg-transparent border-0 text-muted" title="Sair do Sistema">
+            <button type="submit" class="sidebar-nav-link text-muted" title="Sair do Sistema">
                 <i class="bi bi-box-arrow-right"></i>
             </button>
         </form>
     </div>
+
+    <!-- MODAL DE CONFIGURAÇÕES E INFORMAÇÕES DO SISTEMA -->
+    <div class="modal fade" id="modalConfiguracoes" tabindex="-1" aria-labelledby="modalConfiguracoesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-dark">
+                <div class="modal-header modal-header-dark">
+                    <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="modalConfiguracoesLabel">
+                        <i class="bi bi-sliders text-warning"></i> Configurações do Sistema
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border);">
+                        <div class="small fw-bold text-white mb-2">
+                            <i class="bi bi-mortarboard-fill text-warning me-1"></i> Projeto Integrador Full Stack (ESEG 2026)
+                        </div>
+                        <div class="small" style="color: var(--hs-text-muted);">
+                            <strong>Autor:</strong> Eduardo Marques Fadini &bull; <strong>RA:</strong> 42721<br>
+                            <strong>Curso:</strong> Engenharia de Computação &bull; Programação Web
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">Ambiente e Tecnologias</label>
+                        <ul class="list-unstyled small mb-0 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border); color: var(--hs-text-muted);">
+                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Spring Boot:</strong> 3.3.5 / Java 21 LTS</li>
+                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Banco de Dados:</strong> H2 Database (Arquivo: <code>./data/marketing_db</code>)</li>
+                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Normalização:</strong> 3ª Forma Normal (31.314 registros)</li>
+                            <li><i class="bi bi-check2 text-success me-1"></i> <strong>Segurança:</strong> Spring Security 6 (RBAC)</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <label class="form-label text-white">Ferramentas de Banco</label>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/h2-console}" target="_blank" class="btn-hs-outline btn-sm w-100 justify-content-center">
+                                <i class="bi bi-database"></i> Abrir H2 Console (sa)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-footer-dark">
+                    <button type="button" class="btn-hs-primary btn-sm" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </aside>
 
-<!-- TOPBAR SUPERIOR (ESTILO HOCKEYSTACK) -->
+<!-- TOPBAR SUPERIOR (ESTILO MODERNO E HUMANO) -->
 <header th:fragment="topbar(pageTitle)" class="app-topbar">
     <div class="user-welcome-box">
         <div class="user-welcome-avatar">
             <i class="bi bi-person-fill"></i>
         </div>
         <div>
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
                 <h6 class="fw-bold text-white mb-0" th:text="${pageTitle != null ? pageTitle : 'Eduardo Marques Fadini'}">Eduardo Marques Fadini</h6>
-                <span class="badge px-2 py-0" style="background-color: var(--hs-violet); color: #FFF; font-size: 0.68rem; font-weight: 800;"
-                      sec:authentication="principal.authorities">ROLE</span>
+                
+                <!-- Role Tag Específica e Bonita (Sem os colchetes feios de ROLE) -->
+                <span sec:authorize="hasRole('ADMIN')" class="hs-role-badge role-admin">
+                    <i class="bi bi-shield-fill-check"></i> Administrador
+                </span>
+                <span sec:authorize="hasRole('GESTOR_MARKETING') and !hasRole('ADMIN')" class="hs-role-badge role-gestor">
+                    <i class="bi bi-briefcase-fill"></i> Gestor de Marketing
+                </span>
+                <span sec:authorize="hasRole('ANALISTA') and !hasRole('ADMIN') and !hasRole('GESTOR_MARKETING')" class="hs-role-badge role-analista">
+                    <i class="bi bi-graph-up"></i> Analista
+                </span>
             </div>
-            <div class="small" style="color: var(--hs-text-muted);">Bem-vindo de volta ao Marketing Analytics 👋</div>
+            <div class="small" style="color: var(--hs-text-muted);">Plataforma de Performance & Atribuição de Marketing 👋</div>
         </div>
     </div>
 
     <div class="topbar-actions">
-        <a th:href="@{/dashboard}" class="topbar-icon-btn" title="Pesquisar">
-            <i class="bi bi-search"></i>
-        </a>
-        <div class="topbar-icon-btn" title="Notificações">
-            <i class="bi bi-bell"></i>
-            <span class="badge-dot"></span>
-        </div>
+        <button type="button" class="topbar-icon-btn" data-bs-toggle="modal" data-bs-target="#modalConfiguracoes" title="Configurações">
+            <i class="bi bi-gear"></i>
+        </button>
         <div class="topbar-btn">
             <i class="bi bi-calendar3" style="color: var(--hs-text-muted);"></i>
             <span>Base 2024 - 2025</span>
-            <i class="bi bi-chevron-down small" style="color: var(--hs-text-muted);"></i>
         </div>
         <div class="topbar-btn">
             <i class="bi bi-check2-circle" style="color: var(--hs-emerald);"></i>

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class DashboardController {
@@ -47,10 +49,16 @@ public class DashboardController {
                 .filter(campanhaService::isOrcamentoEstourado)
                 .count();
 
+        BigDecimal totalOrcamentoPlanejado = todasCampanhas.stream()
+                .map(Campanha::getOrcamentoPlanejado)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         model.addAttribute("totalContas", contaRepository.count());
         model.addAttribute("totalCampanhas", todasCampanhas.size());
         model.addAttribute("campanhasAtivas", campanhasAtivas);
         model.addAttribute("campanhasOrcamentoEstourado", campanhasOrcamentoEstourado);
+        model.addAttribute("totalOrcamentoPlanejado", totalOrcamentoPlanejado);
         model.addAttribute("totalAnuncios", anuncioRepository.count());
         model.addAttribute("totalPublicos", publicoAlvoRepository.count());
         model.addAttribute("totalLandingPages", landingPageRepository.count());

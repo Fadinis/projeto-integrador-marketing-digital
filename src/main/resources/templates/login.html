@@ -8,16 +8,20 @@
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body class="d-flex flex-column align-items-center justify-content-center p-3"
-      style="min-height: 100vh; background: radial-gradient(circle at 50% 25%, rgba(139, 92, 246, 0.14) 0%, #0E1015 75%) !important;">
+      style="min-height: 100vh; background-color: #0E1015 !important;">
 
 <div class="hs-card shadow-lg my-auto" style="max-width: 440px; width: 100%; border-radius: 20px; padding: 2.25rem;">
     <div class="text-center mb-4">
-        <div class="sidebar-logo mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.5rem; margin-bottom: 1.25rem;">
-            <i class="bi bi-graph-up-arrow text-dark"></i>
+        <!-- Logo Vetorial Moderno sem Círculo Branco Recortado -->
+        <div class="sidebar-logo mx-auto mb-3" style="width: 50px; height: 50px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
         </div>
         <h4 class="fw-bold text-white mb-1" style="letter-spacing: -0.02em;">Marketing Analytics</h4>
         <p class="small mb-0" style="color: var(--hs-text-muted);">
-            Plataforma de Performance & Atribuição SaaS &bull; ESEG 2026
+            Plataforma de Performance &bull; Projeto Integrador ESEG 2026
         </p>
     </div>
 
@@ -67,15 +71,15 @@
                 <i class="bi bi-shield-lock-fill"></i> Credenciais para Avaliação (RBAC):
             </div>
             <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: var(--hs-border) !important;">
-                <span class="badge" style="background-color: rgba(244, 63, 94, 0.2); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.4);">ADMIN</span>
+                <span class="hs-role-badge role-admin">ADMIN</span>
                 <span style="color: var(--hs-text-body); font-family: monospace;">admin@eseg.edu.br / admin123</span>
             </div>
             <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: var(--hs-border) !important;">
-                <span class="badge" style="background-color: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">GESTOR</span>
+                <span class="hs-role-badge role-gestor">GESTOR</span>
                 <span style="color: var(--hs-text-body); font-family: monospace;">gestor@eseg.edu.br / gestor123</span>
             </div>
             <div class="d-flex justify-content-between align-items-center pt-1">
-                <span class="badge" style="background-color: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4);">ANALISTA</span>
+                <span class="hs-role-badge role-analista">ANALISTA</span>
                 <span style="color: var(--hs-text-body); font-family: monospace;">analista@eseg.edu.br / analista123</span>
             </div>
         </div>
