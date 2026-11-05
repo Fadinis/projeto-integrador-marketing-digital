@@ -16,7 +16,7 @@
     <div class="app-content">
         <div th:replace="~{fragments/navbar :: topbar(${campanha.nomeCampanha})}"></div>
 
-        <main class="p-4 flex-grow-1">
+        <main class="p-3 p-md-4 flex-grow-1">
             <!-- Alertas de Feedback -->
             <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 mb-4"
                  style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; border-radius: 12px;">
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Painel de 3 Cards: Orçamento, Status e Máquina de Estados -->
-            <div class="row g-4 mb-4">
+            <div class="row g-3 mb-4">
                 <div class="col-md-4">
                     <div class="hs-card h-100">
                         <div class="metric-card-title">
@@ -147,39 +147,44 @@
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th style="width: 50px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 50px;">ID</th>
                             <th>Nome do Anúncio</th>
-                            <th>Formato</th>
-                            <th>Teste A/B</th>
-                            <th>Linha Criativa</th>
-                            <th>Nota Criativo</th>
-                            <th>Status</th>
-                            <th class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">Ações</th>
+                            <th class="d-none d-lg-table-cell">Formato</th>
+                            <th class="table-nowrap">Teste A/B</th>
+                            <th class="d-none d-xl-table-cell">Linha Criativa</th>
+                            <th class="d-none d-sm-table-cell table-nowrap">Nota Criativo</th>
+                            <th class="table-nowrap">Status</th>
+                            <th class="text-end table-nowrap" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="an : ${anuncios}">
-                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${an.idAnuncio}">#1</td>
-                            <td class="fw-bold text-white" th:text="${an.nomeAnuncio}">Anúncio</td>
+                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${an.idAnuncio}">#1</td>
                             <td>
+                                <div class="fw-bold text-white" th:text="${an.nomeAnuncio}">Anúncio</div>
+                                <div class="small d-lg-none mt-1" style="color: var(--hs-text-muted);">
+                                    <span th:text="${an.formato}">Formato</span> &bull; Nota: <span th:text="${an.notaQualidadeCriativo}">8.5</span>
+                                </div>
+                            </td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge" style="background-color: var(--hs-card-subtle); color: var(--hs-text-body); border: 1px solid var(--hs-border);" th:text="${an.formato}">Formato</span>
                             </td>
-                            <td>
+                            <td class="table-nowrap">
                                 <span class="badge px-2" style="background-color: rgba(245, 158, 11, 0.15); color: var(--hs-amber); font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);" th:text="${an.versaoTesteAb}">A</span>
                             </td>
-                            <td style="color: var(--hs-text-muted);" th:text="${an.linhaCriativa}">Linha</td>
-                            <td>
+                            <td class="d-none d-xl-table-cell" style="color: var(--hs-text-muted);" th:text="${an.linhaCriativa}">Linha</td>
+                            <td class="d-none d-sm-table-cell table-nowrap">
                                 <span class="fw-bold text-white" th:text="${an.notaQualidadeCriativo}">8.5</span>
                                 <small style="color: var(--hs-text-faint);">/10</small>
                             </td>
-                            <td>
+                            <td class="table-nowrap">
                                 <span class="hs-status-pill"
                                       th:classappend="${an.statusAnuncio.name() == 'ATIVO' ? 'hs-status-ativo' : (an.statusAnuncio.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
                                     <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
                                     <span th:text="${an.statusAnuncio}">STATUS</span>
                                 </span>
                             </td>
-                            <td class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                            <td class="text-end table-nowrap" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
                                 <a th:href="@{/anuncios/{id}/editar(id=${an.idAnuncio})}" class="btn-hs-outline btn-sm">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
@@ -203,34 +208,34 @@
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th>Mês Ref.</th>
-                            <th>Impressões</th>
-                            <th>Cliques</th>
-                            <th>Leads</th>
-                            <th>Oportunidades</th>
+                            <th class="table-nowrap">Mês Ref.</th>
+                            <th class="d-none d-sm-table-cell">Impressões</th>
+                            <th class="d-none d-sm-table-cell">Cliques</th>
+                            <th class="d-none d-md-table-cell">Leads</th>
+                            <th class="d-none d-lg-table-cell">Oportunidades</th>
                             <th>Vendas</th>
-                            <th>Custo</th>
-                            <th>Receita</th>
-                            <th>CTR Dinâmico</th>
-                            <th>ROAS Dinâmico</th>
+                            <th class="d-none d-md-table-cell table-nowrap">Custo</th>
+                            <th class="table-nowrap">Receita</th>
+                            <th class="table-nowrap">CTR</th>
+                            <th class="table-nowrap">ROAS</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="rf : ${resumosFunil}">
-                            <td class="fw-bold text-white" th:text="${#temporals.format(rf.data, 'MM/yyyy')}">11/2024</td>
-                            <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.impressoes, 0, 'POINT')}">0</td>
-                            <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.cliques, 0, 'POINT')}">0</td>
-                            <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.leads, 0, 'POINT')}">0</td>
-                            <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.oportunidades, 0, 'POINT')}">0</td>
-                            <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.vendas, 0, 'POINT')}">0</td>
-                            <td class="fw-semibold text-white">R$ <span th:text="${#numbers.formatDecimal(rf.custo, 1, 'POINT', 2, 'COMMA')}"></span></td>
-                            <td class="fw-semibold text-white">R$ <span th:text="${#numbers.formatDecimal(rf.receita, 1, 'POINT', 2, 'COMMA')}"></span></td>
-                            <td>
+                            <td class="fw-bold text-white table-nowrap" th:text="${#temporals.format(rf.data, 'MM/yyyy')}">11/2024</td>
+                            <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.impressoes, 0, 'POINT')}">0</td>
+                            <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.cliques, 0, 'POINT')}">0</td>
+                            <td class="d-none d-md-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.leads, 0, 'POINT')}">0</td>
+                            <td class="d-none d-lg-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(rf.oportunidades, 0, 'POINT')}">0</td>
+                            <td class="fw-bold text-white" th:text="${#numbers.formatInteger(rf.vendas, 0, 'POINT')}">0</td>
+                            <td class="d-none d-md-table-cell fw-semibold text-white table-nowrap">R$ <span th:text="${#numbers.formatDecimal(rf.custo, 1, 'POINT', 2, 'COMMA')}"></span></td>
+                            <td class="fw-semibold text-white table-nowrap">R$ <span th:text="${#numbers.formatDecimal(rf.receita, 1, 'POINT', 2, 'COMMA')}"></span></td>
+                            <td class="table-nowrap">
                                 <span class="badge px-2 py-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 700;">
                                     <span th:text="${rf.calcularCTR()}">0.00</span>%
                                 </span>
                             </td>
-                            <td>
+                            <td class="table-nowrap">
                                 <span class="badge px-2 py-1" style="background-color: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 700;">
                                     <span th:text="${rf.calcularROAS()}">0.00</span>x
                                 </span>

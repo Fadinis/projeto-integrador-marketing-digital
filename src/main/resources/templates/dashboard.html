@@ -19,7 +19,7 @@
         <!-- Topbar Superior -->
         <div th:replace="~{fragments/navbar :: topbar('Painel Analítico')}"></div>
 
-        <main class="p-4 flex-grow-1">
+        <main class="p-3 p-md-4 flex-grow-1">
             <!-- Cabeçalho do Dashboard -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div>
@@ -30,6 +30,7 @@
                         Base relacional normalizada em 3FN &bull; Monitoramento de orçamentos e conformidade (RF01 a RF06)
                     </p>
                 </div>
+                <!-- ÚNICO BOTÃO DE NOVA CAMPANHA NO DASHBOARD -->
                 <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
                     <a th:href="@{/campanhas/nova}" class="btn-hs-primary">
                         <i class="bi bi-plus-lg"></i> Nova Campanha
@@ -40,7 +41,7 @@
             <!-- ROW 1: 4 CARDS DE INDICADORES PRINCIPAIS (LARGURA TOTAL) -->
             <div class="row g-3 mb-4">
                 <!-- Card 1: Contas Anunciantes -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-sm-6">
                     <div class="hs-card h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="metric-card-title">
@@ -76,7 +77,7 @@
                 </div>
 
                 <!-- Card 2: Campanhas (Ativas / Total) -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-sm-6">
                     <div class="hs-card h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="metric-card-title">
@@ -114,7 +115,7 @@
                 </div>
 
                 <!-- Card 3: Criativos & Anúncios -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-sm-6">
                     <div class="hs-card h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="metric-card-title">
@@ -152,7 +153,7 @@
                 </div>
 
                 <!-- Card 4: Controle Orçamentário RF05 -->
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-sm-6">
                     <div class="hs-card h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="metric-card-title">
@@ -180,7 +181,7 @@
                         </div>
                         <div class="mt-3 pt-2" style="border-top: 1px solid var(--hs-border);">
                             <span class="small d-flex justify-content-between align-items-center" style="color: var(--hs-text-muted);">
-                                <span>Teto Total Planejado:</span>
+                                <span>Teto Total:</span>
                                 <strong class="text-white">R$ <span th:text="${#numbers.formatDecimal(totalOrcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}">4.850.000,00</span></strong>
                             </span>
                         </div>
@@ -188,7 +189,7 @@
                 </div>
             </div>
 
-            <!-- ROW 2: TABELA DE CAMPANHAS RECENTES (HOCKEYSTACK DARK TABLE) -->
+            <!-- ROW 2: TABELA DE CAMPANHAS RECENTES (100% RESPONSIVA) -->
             <div class="hs-card mb-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                     <div class="d-flex align-items-center gap-2">
@@ -198,12 +199,9 @@
                             160 cadastradas
                         </span>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
+                    <div>
                         <a th:href="@{/campanhas}" class="btn-hs-outline btn-sm">
                             Ver Todas as 160 &rarr;
-                        </a>
-                        <a th:href="@{/campanhas/nova}" class="btn-hs-primary btn-sm" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                            <i class="bi bi-plus-lg"></i> Nova Campanha
                         </a>
                     </div>
                 </div>
@@ -212,11 +210,11 @@
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th style="width: 70px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 60px;">ID</th>
                             <th>Campanha</th>
-                            <th>Conta Anunciante</th>
-                            <th>Canal</th>
-                            <th>Período</th>
+                            <th class="d-none d-md-table-cell">Conta Anunciante</th>
+                            <th class="d-none d-lg-table-cell">Canal</th>
+                            <th class="d-none d-xl-table-cell">Período</th>
                             <th>Orçamento Planejado</th>
                             <th>Status</th>
                             <th class="text-end">Ações</th>
@@ -224,35 +222,39 @@
                         </thead>
                         <tbody>
                         <tr th:each="c : ${campanhasRecentes}">
-                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
                             <td>
                                 <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}"
                                    class="fw-bold text-white text-decoration-none"
                                    th:text="${c.nomeCampanha}">Campanha</a>
+                                <!-- Subtítulo compacto para celulares -->
+                                <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">
+                                    <span th:text="${c.conta.nomeConta}">Conta</span> &bull; <span th:text="${c.canal}">Canal</span>
+                                </div>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <span style="color: var(--hs-text-muted);" th:text="${c.conta.nomeConta}">Conta</span>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge px-2 py-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 600;"
                                       th:text="${c.canal}">Canal</span>
                             </td>
-                            <td class="small" style="color: var(--hs-text-muted);">
+                            <td class="d-none d-xl-table-cell small table-nowrap" style="color: var(--hs-text-muted);">
                                 <i class="bi bi-calendar3 me-1"></i>
                                 <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yy')}"></span> -
                                 <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yy')}"></span>
                             </td>
-                            <td class="fw-bold text-white">
+                            <td class="fw-bold text-white table-nowrap">
                                 R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
                             </td>
-                            <td>
+                            <td class="table-nowrap">
                                 <span class="hs-status-pill"
                                       th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'hs-status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
                                     <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
                                     <span th:text="${c.statusCampanha}">STATUS</span>
                                 </span>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end table-nowrap">
                                 <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn-hs-outline btn-sm" style="padding: 0.3rem 0.75rem;">
                                     <i class="bi bi-eye"></i> Detalhes
                                 </a>
@@ -281,17 +283,17 @@
                                 <thead>
                                 <tr>
                                     <th>Página de Destino</th>
-                                    <th>Visitas</th>
-                                    <th>Conversões</th>
+                                    <th class="d-none d-sm-table-cell">Visitas</th>
+                                    <th class="d-none d-sm-table-cell">Conversões</th>
                                     <th>Taxa Conv.</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="lp : ${landingPagesRecentes}">
                                     <td class="fw-semibold text-white" th:text="${lp.nomeLandingPage}">LP</td>
-                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.visitas, 0, 'POINT')}">0</td>
-                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.conversoes, 0, 'POINT')}">0</td>
-                                    <td class="fw-bold" style="color: var(--hs-emerald);">
+                                    <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.visitas, 0, 'POINT')}">0</td>
+                                    <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.conversoes, 0, 'POINT')}">0</td>
+                                    <td class="fw-bold table-nowrap" style="color: var(--hs-emerald);">
                                         <span th:text="${lp.calcularTaxaConversao()}">0.00</span>%
                                     </td>
                                 </tr>
@@ -317,8 +319,8 @@
                                 <thead>
                                 <tr>
                                     <th>Conta / Segmento</th>
-                                    <th>Envios</th>
-                                    <th>Aberturas</th>
+                                    <th class="d-none d-sm-table-cell">Envios</th>
+                                    <th class="d-none d-sm-table-cell">Aberturas</th>
                                     <th>Taxa Abertura</th>
                                 </tr>
                                 </thead>
@@ -328,9 +330,9 @@
                                         <div class="fw-bold text-white" th:text="${em.conta.nomeConta}">Conta</div>
                                         <div class="small" style="color: var(--hs-text-muted);" th:text="${em.tipoEmail}">Tipo</div>
                                     </td>
-                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.envios, 0, 'POINT')}">0</td>
-                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.aberturas, 0, 'POINT')}">0</td>
-                                    <td class="fw-bold" style="color: var(--hs-amber);">
+                                    <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.envios, 0, 'POINT')}">0</td>
+                                    <td class="d-none d-sm-table-cell" style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.aberturas, 0, 'POINT')}">0</td>
+                                    <td class="fw-bold table-nowrap" style="color: var(--hs-amber);">
                                         <span th:text="${em.calcularTaxaAbertura()}">0.00</span>%
                                     </td>
                                 </tr>

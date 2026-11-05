@@ -16,7 +16,7 @@
     <div class="app-content">
         <div th:replace="~{fragments/navbar :: topbar('Contas Anunciantes')}"></div>
 
-        <main class="p-4 flex-grow-1">
+        <main class="p-3 p-md-4 flex-grow-1">
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div>
                     <h4 class="fw-bold text-white mb-1">
@@ -49,44 +49,49 @@
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th style="width: 50px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 50px;">ID</th>
                             <th>Conta Anunciante</th>
-                            <th>Segmento / Produto</th>
-                            <th>Porte</th>
-                            <th>Localização (Value Object)</th>
-                            <th>Cliente Desde</th>
-                            <th>Status</th>
-                            <th class="text-end" sec:authorize="hasRole('ADMIN')">Ações</th>
+                            <th class="d-none d-md-table-cell">Segmento / Produto</th>
+                            <th class="d-none d-lg-table-cell">Porte</th>
+                            <th class="d-none d-sm-table-cell">Localização</th>
+                            <th class="d-none d-xl-table-cell">Cliente Desde</th>
+                            <th class="table-nowrap">Status</th>
+                            <th class="text-end table-nowrap" sec:authorize="hasRole('ADMIN')">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="ct : ${contas}">
-                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${ct.idConta}">#1</td>
-                            <td class="fw-bold text-white" th:text="${ct.nomeConta}">Conta</td>
+                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${ct.idConta}">#1</td>
                             <td>
+                                <div class="fw-bold text-white" th:text="${ct.nomeConta}">Conta</div>
+                                <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">
+                                    <span th:text="${ct.segmento}">Segmento</span> &bull; <span th:text="${ct.localizacao.cidade + '/' + ct.localizacao.estado}">SP</span>
+                                </div>
+                            </td>
+                            <td class="d-none d-md-table-cell">
                                 <span class="fw-semibold" style="color: var(--hs-text-body);" th:text="${ct.segmento}">Segmento</span>
                                 <div class="small" style="color: var(--hs-text-muted);" th:text="${ct.produtoPrincipal}">Produto</div>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge" style="background-color: var(--hs-card-subtle); color: var(--hs-text-body); border: 1px solid var(--hs-border);" th:text="${ct.porteEmpresa}">Porte</span>
                             </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-1 text-white">
+                            <td class="d-none d-sm-table-cell">
+                                <div class="d-flex align-items-center gap-1 text-white table-nowrap">
                                     <i class="bi bi-geo-alt-fill text-danger small"></i>
                                     <span th:text="${ct.localizacao.cidade + ' - ' + ct.localizacao.estado}">Cidade - UF</span>
                                 </div>
                                 <span class="badge px-2 mt-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; font-size: 0.7rem; border: 1px solid rgba(139, 92, 246, 0.3);"
                                       th:text="${ct.localizacao.regiao}">Região</span>
                             </td>
-                            <td class="fw-semibold" style="color: var(--hs-text-muted);" th:text="${ct.anoInicioCliente}">2024</td>
-                            <td>
+                            <td class="d-none d-xl-table-cell fw-semibold table-nowrap" style="color: var(--hs-text-muted);" th:text="${ct.anoInicioCliente}">2024</td>
+                            <td class="table-nowrap">
                                 <span class="hs-status-pill"
                                       th:classappend="${ct.statusConta.name() == 'ATIVO' ? 'hs-status-ativo' : 'hs-status-encerrado'}">
                                     <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
                                     <span th:text="${ct.statusConta}">STATUS</span>
                                 </span>
                             </td>
-                            <td class="text-end" sec:authorize="hasRole('ADMIN')">
+                            <td class="text-end table-nowrap" sec:authorize="hasRole('ADMIN')">
                                 <a th:href="@{/contas/{id}/editar(id=${ct.idConta})}" class="btn-hs-outline btn-sm">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>

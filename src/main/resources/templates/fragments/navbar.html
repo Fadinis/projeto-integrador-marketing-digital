@@ -41,6 +41,7 @@
     </ul>
 
     <div class="sidebar-footer">
+        <!-- ÚNICO BOTÃO DE CONFIGURAÇÕES DO SISTEMA -->
         <button type="button" class="sidebar-nav-link" data-bs-toggle="modal" data-bs-target="#modalConfiguracoes" title="Configurações do Sistema">
             <i class="bi bi-gear-fill"></i>
         </button>
@@ -48,62 +49,16 @@
         <div class="sidebar-avatar" title="Eduardo Marques Fadini (RA 42721)">
             EF
         </div>
+        <!-- BOTÃO DE LOGOUT DE ALTA VISIBILIDADE -->
         <form th:action="@{/logout}" method="post" class="m-0">
-            <button type="submit" class="sidebar-nav-link text-muted" title="Sair do Sistema">
+            <button type="submit" class="sidebar-logout-btn" title="Sair do Sistema (Logout)">
                 <i class="bi bi-box-arrow-right"></i>
             </button>
         </form>
     </div>
-
-    <!-- MODAL DE CONFIGURAÇÕES E INFORMAÇÕES DO SISTEMA -->
-    <div class="modal fade" id="modalConfiguracoes" tabindex="-1" aria-labelledby="modalConfiguracoesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content modal-content-dark">
-                <div class="modal-header modal-header-dark">
-                    <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="modalConfiguracoesLabel">
-                        <i class="bi bi-sliders text-warning"></i> Configurações do Sistema
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="mb-3 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border);">
-                        <div class="small fw-bold text-white mb-2">
-                            <i class="bi bi-mortarboard-fill text-warning me-1"></i> Projeto Integrador Full Stack (ESEG 2026)
-                        </div>
-                        <div class="small" style="color: var(--hs-text-muted);">
-                            <strong>Autor:</strong> Eduardo Marques Fadini &bull; <strong>RA:</strong> 42721<br>
-                            <strong>Curso:</strong> Engenharia de Computação &bull; Programação Web
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label text-white">Ambiente e Tecnologias</label>
-                        <ul class="list-unstyled small mb-0 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border); color: var(--hs-text-muted);">
-                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Spring Boot:</strong> 3.3.5 / Java 21 LTS</li>
-                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Banco de Dados:</strong> H2 Database (Arquivo: <code>./data/marketing_db</code>)</li>
-                            <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Normalização:</strong> 3ª Forma Normal (31.314 registros)</li>
-                            <li><i class="bi bi-check2 text-success me-1"></i> <strong>Segurança:</strong> Spring Security 6 (RBAC)</li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <label class="form-label text-white">Ferramentas de Banco</label>
-                        <div class="d-flex gap-2">
-                            <a th:href="@{/h2-console}" target="_blank" class="btn-hs-outline btn-sm w-100 justify-content-center">
-                                <i class="bi bi-database"></i> Abrir H2 Console (sa)
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer modal-footer-dark">
-                    <button type="button" class="btn-hs-primary btn-sm" data-bs-dismiss="modal">Entendido</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </aside>
 
-<!-- TOPBAR SUPERIOR (ESTILO MODERNO E HUMANO) -->
+<!-- TOPBAR SUPERIOR (SEM DUPLICIDADE DE BOTÃO DE CONFIGURAÇÃO) -->
 <header th:fragment="topbar(pageTitle)" class="app-topbar">
     <div class="user-welcome-box">
         <div class="user-welcome-avatar">
@@ -113,7 +68,7 @@
             <div class="d-flex align-items-center gap-2 flex-wrap">
                 <h6 class="fw-bold text-white mb-0" th:text="${pageTitle != null ? pageTitle : 'Eduardo Marques Fadini'}">Eduardo Marques Fadini</h6>
                 
-                <!-- Role Tag Específica e Bonita (Sem os colchetes feios de ROLE) -->
+                <!-- Role Tag Específica e Bonita -->
                 <span sec:authorize="hasRole('ADMIN')" class="hs-role-badge role-admin">
                     <i class="bi bi-shield-fill-check"></i> Administrador
                 </span>
@@ -129,9 +84,6 @@
     </div>
 
     <div class="topbar-actions">
-        <button type="button" class="topbar-icon-btn" data-bs-toggle="modal" data-bs-target="#modalConfiguracoes" title="Configurações">
-            <i class="bi bi-gear"></i>
-        </button>
         <div class="topbar-btn">
             <i class="bi bi-calendar3" style="color: var(--hs-text-muted);"></i>
             <span>Base 2024 - 2025</span>
@@ -142,6 +94,48 @@
         </div>
     </div>
 </header>
+
+<!-- MODAL GLOBAL DE CONFIGURAÇÕES (FORA DA ASIDE - 100% OPERACIONAL) -->
+<div th:fragment="configModal" class="modal fade" id="modalConfiguracoes" tabindex="-1" aria-labelledby="modalConfiguracoesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-dark">
+            <div class="modal-header modal-header-dark d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2 mb-0" id="modalConfiguracoesLabel">
+                    <i class="bi bi-sliders text-warning"></i> Configurações do Sistema
+                </h5>
+                <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Fechar" title="Fechar">&times;</button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border);">
+                    <div class="small fw-bold text-white mb-2">
+                        <i class="bi bi-mortarboard-fill text-warning me-1"></i> Projeto Integrador Full Stack (ESEG 2026)
+                    </div>
+                    <div class="small" style="color: var(--hs-text-muted);">
+                        <strong>Autor:</strong> Eduardo Marques Fadini &bull; <strong>RA:</strong> 42721<br>
+                        <strong>Curso:</strong> Engenharia de Computação &bull; Programação Web
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-white">Ambiente e Tecnologias</label>
+                    <ul class="list-unstyled small mb-0 p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border); color: var(--hs-text-muted);">
+                        <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Spring Boot:</strong> 3.3.5 / Java 21 LTS</li>
+                        <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Banco de Dados:</strong> H2 Database (Arquivo: <code>./data/marketing_db</code>)</li>
+                        <li class="mb-1"><i class="bi bi-check2 text-success me-1"></i> <strong>Normalização:</strong> 3ª Forma Normal (31.314 registros)</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> <strong>Segurança:</strong> Spring Security 6 (RBAC)</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <label class="form-label text-white">Ferramentas de Banco</label>
+                    <a th:href="@{/h2-console}" target="_blank" class="btn-hs-outline btn-sm w-100 justify-content-center">
+                        <i class="bi bi-database"></i> Abrir H2 Console (sa)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

@@ -16,7 +16,7 @@
     <div class="app-content">
         <div th:replace="~{fragments/navbar :: topbar('Gestão de Campanhas')}"></div>
 
-        <main class="p-4 flex-grow-1">
+        <main class="p-3 p-md-4 flex-grow-1">
             <!-- Header da Página -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div>
@@ -46,50 +46,54 @@
                 <span th:text="${mensagemErro}"></span>
             </div>
 
-            <!-- Card Tabela SaaS -->
+            <!-- Card Tabela SaaS (100% Responsiva em qualquer tamanho no F12) -->
             <div class="hs-card">
                 <div class="table-responsive">
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th style="width: 60px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 60px;">ID</th>
                             <th>Campanha</th>
-                            <th>Conta</th>
-                            <th>Canal / Funil</th>
-                            <th>Orçamento Planejado</th>
-                            <th>Custo Real</th>
-                            <th style="min-width: 150px;">Consumo (%)</th>
-                            <th>Status</th>
-                            <th class="text-end">Ações</th>
+                            <th class="d-none d-md-table-cell">Conta</th>
+                            <th class="d-none d-lg-table-cell">Canal / Funil</th>
+                            <th class="table-nowrap">Orçamento</th>
+                            <th class="d-none d-lg-table-cell table-nowrap">Custo Real</th>
+                            <th class="d-none d-md-table-cell" style="min-width: 140px;">Consumo (%)</th>
+                            <th class="table-nowrap">Status</th>
+                            <th class="text-end table-nowrap">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="c : ${campanhas}">
-                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
                             <td>
                                 <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-bold text-white text-decoration-none"
                                    th:text="${c.nomeCampanha}">Nome</a>
-                                <div class="small" style="color: var(--hs-text-muted);">
+                                <!-- Informações compactas para celular -->
+                                <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">
+                                    <span th:text="${c.conta.nomeConta}">Conta</span> &bull; <span th:text="${c.canal}">Canal</span>
+                                </div>
+                                <div class="small d-none d-sm-block" style="color: var(--hs-text-muted);">
                                     <i class="bi bi-calendar-event me-1"></i>
                                     <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> até
                                     <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <span class="fw-semibold" style="color: var(--hs-text-body);" th:text="${c.conta.nomeConta}">Conta</span>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge px-2 py-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 600;"
                                       th:text="${c.canal}">Canal</span>
                                 <div class="small" style="color: var(--hs-text-muted);" th:text="${c.posicaoFunil}">Funil</div>
                             </td>
-                            <td class="fw-bold text-white">
+                            <td class="fw-bold text-white table-nowrap">
                                 R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
                             </td>
-                            <td class="fw-semibold" style="color: var(--hs-text-muted);">
+                            <td class="d-none d-lg-table-cell fw-semibold table-nowrap" style="color: var(--hs-text-muted);">
                                 R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <div class="d-flex align-items-center justify-content-between mb-1">
                                     <small class="fw-bold"
                                            th:style="${orcamentosEstourados[c.idCampanha]} ? 'color: var(--hs-rose);' : 'color: var(--hs-emerald);'"
@@ -102,14 +106,14 @@
                                          th:style="'width: ' + (${percentuaisOrcamento[c.idCampanha]} > 100 ? 100 : ${percentuaisOrcamento[c.idCampanha]}) + '%; background-color: ' + (${orcamentosEstourados[c.idCampanha]} ? 'var(--hs-rose)' : 'var(--hs-emerald)') + '; border-radius: 9999px;'"></div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="table-nowrap">
                                 <span class="hs-status-pill"
                                       th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'hs-status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
                                     <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
                                     <span th:text="${c.statusCampanha}">STATUS</span>
                                 </span>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end table-nowrap">
                                 <div class="btn-group btn-group-sm">
                                     <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn-hs-outline" title="Ver detalhes do funil">
                                         <i class="bi bi-eye"></i> Detalhes

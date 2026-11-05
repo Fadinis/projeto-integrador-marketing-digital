@@ -40,6 +40,11 @@
     box-sizing: border-box;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--hs-bg-dark) !important;
     color: var(--hs-text-body);
@@ -58,6 +63,8 @@ body {
     display: flex;
     min-height: 100vh;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* Sidebar Vertical Esquerda */
@@ -76,7 +83,7 @@ body {
     z-index: 1000;
 }
 
-/* Logo Vetorial Moderno (SaaS Clean - Sem círculo branco recortado) */
+/* Logo Vetorial Moderno (SaaS Clean) */
 .sidebar-logo {
     width: 44px;
     height: 44px;
@@ -180,6 +187,30 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Botão de Logout com Alto Contraste e Visibilidade */
+.sidebar-logout-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FB7185 !important;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.28);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-logout-btn:hover {
+    background: rgba(244, 63, 94, 0.25);
+    color: #FFFFFF !important;
+    border-color: rgba(244, 63, 94, 0.6);
+    transform: scale(1.06);
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
+}
+
 /* Área Principal de Conteúdo */
 .app-content {
     margin-left: 76px;
@@ -189,6 +220,8 @@ body {
     min-height: 100vh;
     background-color: var(--hs-bg-dark);
     width: calc(100% - 76px);
+    max-width: calc(100% - 76px);
+    overflow-x: hidden;
 }
 
 /* Top Header Bar */
@@ -220,7 +253,7 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Role Badges Humanizadas (Substitui [ROLE_ADMIN] feio) */
+/* Role Badges Humanizadas */
 .hs-role-badge {
     display: inline-flex;
     align-items: center;
@@ -278,38 +311,6 @@ body {
     background-color: var(--hs-card-subtle);
 }
 
-.topbar-icon-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background-color: var(--hs-card-bg);
-    border: 1px solid var(--hs-border);
-    color: var(--hs-text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    text-decoration: none;
-}
-
-.topbar-icon-btn:hover {
-    color: #FFFFFF;
-    border-color: var(--hs-border-hover);
-}
-
-.badge-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--hs-rose);
-    border-radius: 50%;
-    position: absolute;
-    top: 7px;
-    right: 7px;
-}
-
 /* --------------------------------------------------------------------------
    CARDS DE MÉTRICAS COM SPARKLINES
    -------------------------------------------------------------------------- */
@@ -321,7 +322,8 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease;
+    max-width: 100%;
 }
 
 .hs-card:hover {
@@ -366,12 +368,6 @@ body {
     gap: 0.2rem;
 }
 
-.metric-pill-badge.alert {
-    background-color: rgba(244, 63, 94, 0.15);
-    color: #FB7185;
-    border-color: rgba(244, 63, 94, 0.3);
-}
-
 .sparkline-container {
     width: 100%;
     height: 55px;
@@ -385,8 +381,31 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   TABELAS DARK SAAS
+   TABELAS DARK SAAS & RESPONSIVIDADE TOTAL
    -------------------------------------------------------------------------- */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+}
+
+/* Custom Scrollbar Elegante e Dark */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
 .table-dark-saas {
     width: 100%;
     color: var(--hs-text-body);
@@ -402,16 +421,17 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     border-bottom: 1px solid var(--hs-border) !important;
-    padding: 0.85rem 1.15rem;
+    padding: 0.85rem 1rem;
     white-space: nowrap;
 }
 
 .table-dark-saas tbody td {
-    padding: 0.95rem 1.15rem;
+    padding: 0.85rem 1rem;
     border-bottom: 1px solid var(--hs-border);
     background-color: transparent !important;
     color: var(--hs-text-body);
     font-size: 0.88rem;
+    vertical-align: middle;
 }
 
 .table-dark-saas tbody tr {
@@ -420,6 +440,10 @@ body {
 
 .table-dark-saas tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.table-nowrap {
+    white-space: nowrap !important;
 }
 
 /* Status Pills */
@@ -431,6 +455,7 @@ body {
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .hs-status-ativo {
@@ -494,6 +519,7 @@ body {
     transition: all 0.2s ease;
     text-decoration: none;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-hs-primary:hover {
@@ -516,6 +542,7 @@ body {
     gap: 0.4rem;
     text-decoration: none;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-hs-outline:hover {
@@ -530,7 +557,7 @@ body {
     border: 1px solid var(--hs-border);
     border-radius: 18px;
     color: var(--hs-text-body);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
 }
 
 .modal-header-dark {
@@ -538,9 +565,22 @@ body {
     padding: 1.25rem 1.5rem;
 }
 
-.modal-footer-dark {
-    border-top: 1px solid var(--hs-border);
-    padding: 1rem 1.5rem;
+.btn-close-custom {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.7rem;
+    line-height: 1;
+    padding: 0 0.4rem;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-close-custom:hover {
+    opacity: 1;
+    color: #FFFFFF;
+    transform: scale(1.15);
 }
 
 /* Footer Dark */
@@ -559,6 +599,9 @@ body {
 @media (max-width: 991.98px) {
     .app-container {
         flex-direction: column;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
 
     .app-sidebar {
@@ -567,7 +610,7 @@ body {
         position: relative;
         flex-direction: row;
         justify-content: space-between;
-        padding: 0.75rem 1.25rem;
+        padding: 0.75rem 1rem;
         border-right: none;
         border-bottom: 1px solid var(--hs-border);
         top: 0;
@@ -607,7 +650,7 @@ body {
         margin-top: 0;
         flex-direction: row;
         width: auto;
-        gap: 0.35rem;
+        gap: 0.5rem;
     }
 
     .sidebar-divider {
@@ -620,9 +663,17 @@ body {
         font-size: 0.8rem;
     }
 
+    .sidebar-logout-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
     .app-content {
         margin-left: 0 !important;
         width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
     }
 
     .app-topbar {
@@ -654,6 +705,12 @@ body {
     }
 
     .hs-card {
-        padding: 1.15rem;
+        padding: 1rem;
+    }
+
+    .table-dark-saas thead th, 
+    .table-dark-saas tbody td {
+        padding: 0.65rem 0.6rem;
+        font-size: 0.82rem;
     }
 }

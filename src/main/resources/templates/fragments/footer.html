@@ -2,22 +2,54 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<footer th:fragment="footer" class="app-footer">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <div class="d-flex align-items-center gap-2">
-            <span class="badge" style="background-color: rgba(245, 158, 11, 0.15); color: var(--hs-amber); font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);">
-                ESEG &bull; Engenharia de Computação
-            </span>
-            <span>Programação Web &bull; Projeto Integrador Full Stack (2º Semestre 2026)</span>
+<div th:fragment="footer">
+    <!-- Modal Global de Configurações do Sistema -->
+    <div th:replace="~{fragments/navbar :: configModal}"></div>
+
+    <footer class="app-footer">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge" style="background-color: rgba(245, 158, 11, 0.15); color: var(--hs-amber); font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);">
+                    ESEG &bull; Engenharia de Computação
+                </span>
+                <span>Programação Web &bull; Projeto Integrador Full Stack (2º Semestre 2026)</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; font-weight: 700; border: 1px solid rgba(139, 92, 246, 0.3);">
+                    <i class="bi bi-person-badge"></i> Eduardo Marques Fadini &bull; RA: 42721
+                </span>
+                <span class="small text-muted">Spring Boot 3.3.5 &bull; H2 Database &bull; 3FN</span>
+            </div>
         </div>
-        <div class="d-flex align-items-center gap-3">
-            <span class="badge" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; font-weight: 700; border: 1px solid rgba(139, 92, 246, 0.3);">
-                <i class="bi bi-person-badge"></i> Eduardo Marques Fadini &bull; RA: 42721
-            </span>
-            <span class="small text-muted">Spring Boot 3.3.5 &bull; H2 Database &bull; 3FN</span>
-        </div>
-    </div>
-</footer>
+    </footer>
+
+    <!-- Script de Garantia para Interação com Modais -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var modalEl = btn.closest('.modal');
+                    if (modalEl) {
+                        try {
+                            if (window.bootstrap && bootstrap.Modal) {
+                                var bsModal = bootstrap.Modal.getInstance(modalEl);
+                                if (bsModal) {
+                                    bsModal.hide();
+                                    return;
+                                }
+                            }
+                        } catch(e) {}
+                        modalEl.classList.remove('show');
+                        modalEl.style.display = 'none';
+                        document.querySelectorAll('.modal-backdrop').forEach(function(b) { b.remove(); });
+                        document.body.classList.remove('modal-open');
+                        document.body.style = '';
+                    }
+                });
+            });
+        });
+    </script>
+</div>
 
 </body>
 </html>
