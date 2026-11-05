@@ -12,22 +12,26 @@
 <div class="main-wrapper">
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container pb-5" style="max-width: 720px;">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3">
-                <h5 class="fw-bold mb-0" style="color: var(--color-primary-dark);"
-                    th:text="${anuncio.idAnuncio == null ? 'Novo Anúncio' : 'Editar Anúncio #' + anuncio.idAnuncio}">Anúncio</h5>
+    <div class="container pb-5" style="max-width: 740px;">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                <i class="bi bi-collection-play text-primary fs-5"></i>
+                <h5 class="fw-bold mb-0" style="color: var(--text-heading);"
+                    th:text="${anuncio.idAnuncio == null ? 'Novo Anúncio / Criativo' : 'Editar Anúncio #' + anuncio.idAnuncio}">Anúncio</h5>
             </div>
             <div class="card-body p-4">
 
-                <div th:if="${mensagemErro}" class="alert alert-danger py-2 shadow-sm" th:text="${mensagemErro}"></div>
+                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm mb-4">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span th:text="${mensagemErro}"></span>
+                </div>
 
                 <form th:action="@{/anuncios/salvar}" th:object="${anuncio}" method="post">
                     <input type="hidden" th:field="*{idAnuncio}">
 
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label class="form-label fw-semibold">Campanha Vinculada *</label>
+                            <label class="form-label">Campanha Vinculada *</label>
                             <select class="form-select" th:field="*{campanha.idCampanha}" required>
                                 <option value="">Selecione a campanha...</option>
                                 <option th:each="cp : ${campanhas}"
@@ -37,46 +41,50 @@
                         </div>
 
                         <div class="col-md-8">
-                            <label class="form-label fw-semibold">Nome do Anúncio *</label>
-                            <input type="text" class="form-control" th:field="*{nomeAnuncio}" required>
+                            <label class="form-label">Nome do Anúncio *</label>
+                            <input type="text" class="form-control" th:field="*{nomeAnuncio}" placeholder="Ex: Vídeo Reels - Depoimento Cliente" required>
                             <div class="text-danger small" th:if="${#fields.hasErrors('nomeAnuncio')}" th:errors="*{nomeAnuncio}"></div>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Formato *</label>
-                            <input type="text" class="form-control" th:field="*{formato}" placeholder="Vídeo, Carrossel, Texto" required>
+                            <label class="form-label">Formato *</label>
+                            <input type="text" class="form-control" th:field="*{formato}" placeholder="Vídeo, Imagem, Carrossel" required>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Versão Teste A/B *</label>
+                        <div class="col-md-4">
+                            <label class="form-label">Versão Teste A/B *</label>
                             <select class="form-select" th:field="*{versaoTesteAb}" required>
                                 <option value="A">Versão A</option>
                                 <option value="B">Versão B</option>
                             </select>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Linha Criativa *</label>
-                            <input type="text" class="form-control" th:field="*{linhaCriativa}" placeholder="Ex: Depoimento" required>
+                        <div class="col-md-4">
+                            <label class="form-label">Linha Criativa *</label>
+                            <input type="text" class="form-control" th:field="*{linhaCriativa}" placeholder="Ex: Dor, Prova Social, Humor" required>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Nota Qualidade (0–10) *</label>
-                            <input type="number" step="0.1" min="0" max="10" class="form-control" th:field="*{notaQualidadeCriativo}" required>
+                        <div class="col-md-4">
+                            <label class="form-label">Nota Qualidade (0 a 10) *</label>
+                            <input type="number" step="0.1" min="0" max="10" class="form-control" th:field="*{notaQualidadeCriativo}" placeholder="8.5" required>
                             <div class="text-danger small" th:if="${#fields.hasErrors('notaQualidadeCriativo')}" th:errors="*{notaQualidadeCriativo}"></div>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Status *</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Status do Anúncio *</label>
                             <select class="form-select" th:field="*{statusAnuncio}" required>
                                 <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a th:href="@{/anuncios}" class="btn btn-outline-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Salvar Anúncio</button>
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--surface-border) !important;">
+                        <a th:href="@{/anuncios}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Salvar Anúncio
+                        </button>
                     </div>
                 </form>
             </div>

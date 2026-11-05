@@ -12,38 +12,42 @@
 <div class="main-wrapper">
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container pb-5" style="max-width: 720px;">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3">
-                <h5 class="fw-bold mb-0" style="color: var(--color-primary-dark);"
+    <div class="container pb-5" style="max-width: 740px;">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
+                <i class="bi bi-buildings text-primary fs-5"></i>
+                <h5 class="fw-bold mb-0" style="color: var(--text-heading);"
                     th:text="${conta.idConta == null ? 'Nova Conta Anunciante' : 'Editar Conta #' + conta.idConta}">Conta</h5>
             </div>
             <div class="card-body p-4">
 
-                <div th:if="${mensagemErro}" class="alert alert-danger py-2 shadow-sm" th:text="${mensagemErro}"></div>
+                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm mb-4">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span th:text="${mensagemErro}"></span>
+                </div>
 
                 <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
                     <input type="hidden" th:field="*{idConta}">
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Nome da Conta *</label>
-                            <input type="text" class="form-control" th:field="*{nomeConta}" required>
+                            <label class="form-label">Nome da Conta *</label>
+                            <input type="text" class="form-control" th:field="*{nomeConta}" placeholder="Ex: Tech Solutions Ltda" required>
                             <div class="text-danger small" th:if="${#fields.hasErrors('nomeConta')}" th:errors="*{nomeConta}"></div>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Segmento *</label>
-                            <input type="text" class="form-control" th:field="*{segmento}" required>
+                            <label class="form-label">Segmento *</label>
+                            <input type="text" class="form-control" th:field="*{segmento}" placeholder="Ex: Tecnologia, Finanças, Varejo" required>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Produto Principal *</label>
-                            <input type="text" class="form-control" th:field="*{produtoPrincipal}" required>
+                            <label class="form-label">Produto Principal *</label>
+                            <input type="text" class="form-control" th:field="*{produtoPrincipal}" placeholder="Ex: Plataforma SaaS" required>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Porte da Empresa *</label>
+                            <label class="form-label">Porte da Empresa *</label>
                             <select class="form-select" th:field="*{porteEmpresa}" required>
                                 <option value="Pequeno porte">Pequeno porte</option>
                                 <option value="Médio porte">Médio porte</option>
@@ -52,22 +56,22 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Ano Início Cliente *</label>
-                            <input type="number" min="2000" max="2030" class="form-control" th:field="*{anoInicioCliente}" required>
+                            <label class="form-label">Ano Início Cliente *</label>
+                            <input type="number" min="2000" max="2030" class="form-control" th:field="*{anoInicioCliente}" placeholder="2024" required>
                         </div>
 
                         <div class="col-md-5">
-                            <label class="form-label fw-semibold">Cidade *</label>
-                            <input type="text" class="form-control" th:field="*{localizacao.cidade}" required>
+                            <label class="form-label">Cidade *</label>
+                            <input type="text" class="form-control" th:field="*{localizacao.cidade}" placeholder="São Paulo" required>
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">Estado (UF) *</label>
+                            <label class="form-label">Estado (UF) *</label>
                             <input type="text" maxlength="2" class="form-control" th:field="*{localizacao.estado}" placeholder="SP" required>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label fw-semibold">Região *</label>
+                            <label class="form-label">Região *</label>
                             <select class="form-select" th:field="*{localizacao.regiao}" required>
                                 <option value="Sudeste">Sudeste</option>
                                 <option value="Sul">Sul</option>
@@ -77,17 +81,21 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Status da Conta *</label>
+                        <div class="col-md-6">
+                            <label class="form-label">Status da Conta *</label>
                             <select class="form-select" th:field="*{statusConta}" required>
                                 <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a th:href="@{/contas}" class="btn btn-outline-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Salvar Conta</button>
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--surface-border) !important;">
+                        <a th:href="@{/contas}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Salvar Conta
+                        </button>
                     </div>
                 </form>
             </div>

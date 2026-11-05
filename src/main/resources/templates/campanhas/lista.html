@@ -14,76 +14,110 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <div class="container pb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div>
-                <h3 class="fw-bold mb-0" style="color: var(--color-primary-dark);">Gestão de Campanhas</h3>
-                <p class="text-muted small mb-0">Controle financeiro, ciclo de vida e alocação de criativos</p>
+                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
+                    <i class="bi bi-megaphone me-2" style="color: var(--brand-primary);"></i>Gestão de Campanhas
+                </h3>
+                <p class="text-muted small mb-0">Controle de vigência, canais, orçamentos e criativos vinculados</p>
             </div>
             <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                <a th:href="@{/campanhas/nova}" class="btn btn-primary">+ Nova Campanha</a>
+                <a th:href="@{/campanhas/nova}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Nova Campanha
+                </a>
             </div>
         </div>
 
-        <div th:if="${mensagemSucesso}" class="alert alert-success py-2 shadow-sm" th:text="${mensagemSucesso}"></div>
-        <div th:if="${mensagemErro}" class="alert alert-danger py-2 shadow-sm" th:text="${mensagemErro}"></div>
+        <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 shadow-sm">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensagemSucesso}"></span>
+        </div>
+        <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${mensagemErro}"></span>
+        </div>
 
-        <div class="card border-0 shadow-sm">
+        <div class="card">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="small">
+                <table class="table align-middle">
+                    <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nome da Campanha</th>
+                        <th style="width: 50px;">ID</th>
+                        <th>Campanha</th>
                         <th>Conta</th>
                         <th>Canal / Funil</th>
                         <th>Orçamento Planejado</th>
-                        <th>Custo Acumulado</th>
-                        <th>Consumo (%)</th>
+                        <th>Custo Real</th>
+                        <th style="min-width: 140px;">Consumo (%)</th>
                         <th>Status</th>
                         <th class="text-end">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="c : ${campanhas}">
-                        <td th:text="${c.idCampanha}">1</td>
+                        <td class="text-muted small" th:text="'#' + ${c.idCampanha}">#1</td>
                         <td>
-                            <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-semibold text-decoration-none"
-                               style="color: var(--color-primary-dark);" th:text="${c.nomeCampanha}">Nome</a>
+                            <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-bold text-dark text-decoration-none"
+                               th:text="${c.nomeCampanha}">Nome</a>
                             <div class="text-muted small">
+                                <i class="bi bi-calendar-event"></i>
                                 <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> até
                                 <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
                             </div>
                         </td>
-                        <td th:text="${c.conta.nomeConta}">Conta</td>
                         <td>
-                            <span class="badge" style="background-color: var(--color-primary-light); color: var(--color-primary-dark);"
+                            <span class="fw-semibold text-secondary" th:text="${c.conta.nomeConta}">Conta</span>
+                        </td>
+                        <td>
+                            <span class="badge" style="background-color: var(--brand-primary-soft); color: var(--brand-primary); font-weight: 700;"
                                   th:text="${c.canal}">Canal</span>
                             <div class="small text-muted" th:text="${c.posicaoFunil}">Funil</div>
                         </td>
-                        <td>R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span></td>
-                        <td>R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span></td>
-                        <td>
-                            <span class="fw-bold"
-                                  th:style="${orcamentosEstourados[c.idCampanha]} ? 'color: var(--color-danger);' : 'color: var(--color-success);'"
-                                  th:text="${percentuaisOrcamento[c.idCampanha] + '%'}">0%</span>
-                            <span th:if="${orcamentosEstourados[c.idCampanha]}" class="badge-esgotado ms-1">ESGOTADO</span>
+                        <td class="fw-semibold">
+                            R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
+                        </td>
+                        <td class="fw-semibold text-secondary">
+                            R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
                         </td>
                         <td>
-                            <span th:class="${c.statusCampanha.name() == 'ATIVO' ? 'badge-status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'badge-status-pausado' : 'badge-status-encerrado')}"
-                                  th:text="${c.statusCampanha}">STATUS</span>
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <small class="fw-bold"
+                                       th:style="${orcamentosEstourados[c.idCampanha]} ? 'color: #DC2626;' : 'color: var(--brand-primary);'"
+                                       th:text="${percentuaisOrcamento[c.idCampanha] + '%'}">0%</small>
+                                <span th:if="${orcamentosEstourados[c.idCampanha]}"
+                                      class="badge bg-danger" style="font-size: 0.65rem;">ESGOTADO</span>
+                            </div>
+                            <div class="progress-budget">
+                                <div class="progress-budget-bar"
+                                     th:classappend="${orcamentosEstourados[c.idCampanha]} ? 'overbudget' : ''"
+                                     th:style="'width: ' + (${percentuaisOrcamento[c.idCampanha]} > 100 ? 100 : ${percentuaisOrcamento[c.idCampanha]}) + '%;'"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'status-pausado' : 'status-encerrado')}">
+                                <span class="status-dot"></span>
+                                <span th:text="${c.statusCampanha}">STATUS</span>
+                            </span>
                         </td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">
-                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn btn-outline-primary">Detalhes</a>
+                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn btn-outline-primary" title="Ver detalhes do funil">
+                                    <i class="bi bi-eye"></i> Detalhes
+                                </a>
                                 <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
                                    th:href="@{/campanhas/{id}/editar(id=${c.idCampanha})}"
-                                   class="btn btn-outline-secondary">Editar</a>
+                                   class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
                             </div>
                             <form sec:authorize="hasRole('ADMIN')"
                                   th:action="@{/campanhas/{id}/excluir(id=${c.idCampanha})}"
                                   method="post" class="d-inline ms-1"
                                   onsubmit="return confirm('Deseja realmente excluir esta campanha?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir campanha">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </form>
                         </td>
                     </tr>

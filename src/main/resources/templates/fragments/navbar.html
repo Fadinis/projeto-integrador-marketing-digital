@@ -5,39 +5,52 @@
 
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark navbar-custom mb-4">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/dashboard}">
+        <a class="navbar-brand" th:href="@{/dashboard}">
+            <span class="brand-icon"><i class="bi bi-graph-up-arrow"></i></span>
             <span>Marketing Analytics</span>
             <span class="brand-badge">3FN</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="menuPrincipal">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
+                    <a class="nav-link" th:href="@{/dashboard}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/campanhas}">Campanhas</a>
+                    <a class="nav-link" th:href="@{/campanhas}">
+                        <i class="bi bi-megaphone"></i> Campanhas
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/anuncios}">Anúncios</a>
+                    <a class="nav-link" th:href="@{/anuncios}">
+                        <i class="bi bi-collection-play"></i> Anúncios
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/contas}">Contas Anunciantes</a>
+                    <a class="nav-link" th:href="@{/contas}">
+                        <i class="bi bi-buildings"></i> Contas Anunciantes
+                    </a>
                 </li>
             </ul>
 
-            <div class="d-flex align-items-center gap-3 text-light small">
-                <div>
-                    <span class="text-white-50">Usuário:</span>
-                    <strong sec:authentication="name" class="text-white">usuario@eseg.edu.br</strong>
-                    <span class="badge" style="background-color: var(--color-accent-yellow); color: var(--color-primary-dark); font-weight: 700;"
-                          sec:authentication="principal.authorities">ROLE</span>
+            <div class="d-flex align-items-center gap-3">
+                <div class="user-pill text-light small">
+                    <i class="bi bi-person-circle fs-5" style="color: var(--brand-accent);"></i>
+                    <div>
+                        <strong sec:authentication="name" class="text-white d-block" style="line-height: 1.1;">usuario@eseg.edu.br</strong>
+                        <span class="badge px-2 py-0" style="background-color: var(--brand-accent); color: var(--brand-dark); font-size: 0.68rem; font-weight: 800;"
+                              sec:authentication="principal.authorities">ROLE</span>
+                    </div>
                 </div>
                 <form th:action="@{/logout}" method="post" class="m-0">
-                    <button type="submit" class="btn btn-outline-light btn-sm">Sair</button>
+                    <button type="submit" class="btn btn-outline-light btn-sm" title="Encerrar sessão">
+                        <i class="bi bi-box-arrow-right"></i> Sair
+                    </button>
                 </form>
             </div>
         </div>

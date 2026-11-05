@@ -14,22 +14,26 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <div class="container pb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div>
-                <h3 class="fw-bold mb-0" style="color: var(--color-primary-dark);">Criativos e Anúncios</h3>
-                <p class="text-muted small mb-0">Peças publicitárias, testes A/B e índices de qualidade</p>
+                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
+                    <i class="bi bi-collection-play me-2" style="color: var(--brand-primary);"></i>Criativos & Anúncios
+                </h3>
+                <p class="text-muted small mb-0">Peças publicitárias vinculadas a campanhas, testes A/B e índices de qualidade</p>
             </div>
             <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                <a th:href="@{/anuncios/novo}" class="btn btn-primary">+ Novo Anúncio</a>
+                <a th:href="@{/anuncios/novo}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Novo Anúncio
+                </a>
             </div>
         </div>
 
-        <div class="card border-0 shadow-sm">
+        <div class="card">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="small">
+                <table class="table align-middle">
+                    <thead>
                     <tr>
-                        <th>ID</th>
+                        <th style="width: 50px;">ID</th>
                         <th>Anúncio</th>
                         <th>Campanha / Conta</th>
                         <th>Formato</th>
@@ -42,24 +46,35 @@
                     </thead>
                     <tbody>
                     <tr th:each="a : ${anuncios}">
-                        <td th:text="${a.idAnuncio}">1</td>
-                        <td class="fw-semibold" style="color: var(--color-primary-dark);" th:text="${a.nomeAnuncio}">Anúncio</td>
+                        <td class="text-muted small" th:text="'#' + ${a.idAnuncio}">#1</td>
+                        <td class="fw-bold text-dark" th:text="${a.nomeAnuncio}">Anúncio</td>
                         <td>
                             <a th:href="@{/campanhas/{id}(id=${a.campanha.idCampanha})}"
-                               class="text-decoration-none fw-semibold" style="color: var(--color-primary);"
+                               class="text-decoration-none fw-semibold" style="color: var(--brand-primary);"
                                th:text="${a.campanha.nomeCampanha}">Campanha</a>
                             <div class="small text-muted" th:text="${a.campanha.conta.nomeConta}">Conta</div>
                         </td>
-                        <td th:text="${a.formato}">Vídeo</td>
-                        <td><span class="badge bg-light text-dark border" th:text="${a.versaoTesteAb}">A</span></td>
-                        <td th:text="${a.linhaCriativa}">Criativo</td>
-                        <td class="fw-bold" style="color: var(--color-primary);" th:text="${a.notaQualidadeCriativo}">9.0</td>
+                        <td><span class="badge bg-light text-dark border" th:text="${a.formato}">Vídeo</span></td>
                         <td>
-                            <span th:class="${a.statusAnuncio.name() == 'ATIVO' ? 'badge-status-ativo' : (a.statusAnuncio.name() == 'PAUSADO' ? 'badge-status-pausado' : 'badge-status-encerrado')}"
-                                  th:text="${a.statusAnuncio}">STATUS</span>
+                            <span class="badge px-2" style="background-color: var(--brand-accent-soft); color: var(--brand-accent-text); font-weight: 700;"
+                                  th:text="${a.versaoTesteAb}">A</span>
+                        </td>
+                        <td th:text="${a.linhaCriativa}">Criativo</td>
+                        <td>
+                            <span class="fw-bold" style="color: var(--brand-primary);" th:text="${a.notaQualidadeCriativo}">9.0</span>
+                            <small class="text-muted">/10</small>
+                        </td>
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${a.statusAnuncio.name() == 'ATIVO' ? 'status-ativo' : (a.statusAnuncio.name() == 'PAUSADO' ? 'status-pausado' : 'status-encerrado')}">
+                                <span class="status-dot"></span>
+                                <span th:text="${a.statusAnuncio}">STATUS</span>
+                            </span>
                         </td>
                         <td class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                            <a th:href="@{/anuncios/{id}/editar(id=${a.idAnuncio})}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a th:href="@{/anuncios/{id}/editar(id=${a.idAnuncio})}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
                         </td>
                     </tr>
                     </tbody>

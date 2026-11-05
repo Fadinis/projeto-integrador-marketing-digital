@@ -1,77 +1,137 @@
 /* ==========================================================================
-   PALETA DE CORES: CYBER MARKETING & ANALYTICS (OPÇÃO 1 - COLOR HUNT)
-   Tema: Gestão e Análise de Marketing Digital — ESEG
+   MARKETING ANALYTICS — MODERN SAAS UI DESIGN SYSTEM
+   Paleta: Cyber Marketing (Roxo Tech, Amarelo Ouro e Lavanda)
+   Tipografia: Plus Jakarta Sans + Bootstrap Icons
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
 :root {
-    --color-primary-dark: #2D1E5F;       /* Roxo Imperial (Navbar, cabeçalhos fortes) */
-    --color-primary: #6C5CE7;            /* Violeta Tech (Botões de ação, links, destaque) */
-    --color-primary-hover: #5844D6;      /* Violeta mais escuro para hover */
-    --color-primary-light: #ECEBFF;      /* Fundo suave com tom violeta para tabelas e badges */
-    
-    --color-accent-yellow: #FDCB6E;      /* Amarelo Ouro / Âmbar (Acentos, badges de alerta) */
-    --color-accent-yellow-dark: #E17055; /* Âmbar terracota para contrastes fortes */
-    --color-accent-yellow-light: #FEF6E4;/* Amarelo bem clarinho para fundos de aviso */
+    /* Identidade Primária (Roxo & Violeta) */
+    --brand-dark: #1A103C;               /* Roxo Noturno Profundo */
+    --brand-dark-rgb: 26, 16, 60;
+    --brand-primary: #6C5CE7;            /* Violeta Tech Elétrico */
+    --brand-primary-hover: #5844D6;      
+    --brand-primary-soft: #F0EEFF;       /* Lavanda Suave para fundos e ícones */
+    --brand-primary-subtle: rgba(108, 92, 231, 0.08);
 
-    --color-bg-body: #F8F7FF;            /* Fundo geral da página (off-white lavanda suave) */
-    --color-card-bg: #FFFFFF;            /* Branco puro para cards */
-    
-    --color-text-main: #2D3436;          /* Grafite profundo para leitura perfeita */
-    --color-text-muted: #636E72;         /* Cinza médio para legendas */
-    --color-border: #E8E5F5;             /* Bordas suaves */
+    /* Acento & Destaque (Amarelo Ouro / Âmbar) */
+    --brand-accent: #FDCB6E;             /* Amarelo Ouro Vibrante */
+    --brand-accent-hover: #F39C12;
+    --brand-accent-soft: #FFF8E7;        /* Fundo suave para alertas e badges */
+    --brand-accent-text: #925805;
 
-    --color-success: #00B894;            /* Verde menta suave */
-    --color-danger: #D63031;             /* Vermelho coral */
+    /* Superfícies & Neutros */
+    --surface-body: #F8F9FD;             /* Fundo geral da página */
+    --surface-card: #FFFFFF;             /* Fundo dos cards e tabelas */
+    --surface-border: #E8EBF3;           /* Borda ultra sutil */
+    
+    /* Tipografia */
+    --text-heading: #1E1B39;             /* Títulos em tom quase preto com subtom violeta */
+    --text-body: #334155;                /* Texto corrido em slate escuro */
+    --text-muted: #64748B;               /* Texto de apoio */
+
+    /* Feedback de Status */
+    --status-ativo-bg: #ECFDF5;
+    --status-ativo-text: #065F46;
+    --status-ativo-border: #A7F3D0;
+
+    --status-pausado-bg: #FFFBEB;
+    --status-pausado-text: #92400E;
+    --status-pausado-border: #FDE68A;
+
+    --status-encerrado-bg: #F1F5F9;
+    --status-encerrado-text: #475569;
+    --status-encerrado-border: #CBD5E1;
+
+    --status-esgotado-bg: #FEF2F2;
+    --status-esgotado-text: #991B1B;
+    --status-esgotado-border: #FECACA;
 }
 
-/* Corpo e tipografia */
+/* Reset Global & Tipografia */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    background-color: var(--color-bg-body) !important;
-    color: var(--color-text-main);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--surface-body) !important;
+    color: var(--text-body);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 0.935rem;
+    line-height: 1.55;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Conteúdo flexível para empurrar o footer para o final da tela */
 .main-wrapper {
     flex: 1 0 auto;
 }
 
+/* Títulos */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
 /* --------------------------------------------------------------------------
-   BARRA DE NAVEGAÇÃO (NAVBAR)
+   NAVBAR MODERNA (GLASS & DEEP PURPLE)
    -------------------------------------------------------------------------- */
 .navbar-custom {
-    background: linear-gradient(135deg, var(--color-primary-dark) 0%, #3C2A7A 100%) !important;
-    box-shadow: 0 4px 15px rgba(45, 30, 95, 0.15);
-    border-bottom: 2px solid rgba(253, 203, 110, 0.3);
+    background: linear-gradient(135deg, #1A103C 0%, #2B1854 100%) !important;
+    border-bottom: 2px solid rgba(253, 203, 110, 0.4);
+    box-shadow: 0 4px 20px rgba(26, 16, 60, 0.2);
+    padding: 0.75rem 0;
 }
 
 .navbar-custom .navbar-brand {
     font-size: 1.25rem;
-    letter-spacing: -0.3px;
+    font-weight: 800;
     color: #FFFFFF !important;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    letter-spacing: -0.03em;
 }
 
-.navbar-custom .navbar-brand .brand-badge {
-    background-color: var(--color-accent-yellow);
-    color: var(--color-primary-dark);
-    font-size: 0.75rem;
-    font-weight: 700;
+.navbar-custom .brand-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 1.15rem;
+    box-shadow: 0 4px 10px rgba(108, 92, 231, 0.4);
+}
+
+.navbar-custom .brand-badge {
+    background-color: var(--brand-accent);
+    color: var(--brand-dark);
+    font-size: 0.7rem;
+    font-weight: 800;
     padding: 3px 8px;
     border-radius: 6px;
-    margin-left: 6px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .navbar-custom .nav-link {
-    color: rgba(255, 255, 255, 0.85) !important;
-    font-weight: 500;
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-weight: 600;
+    font-size: 0.9rem;
     padding: 0.5rem 0.9rem !important;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .navbar-custom .nav-link:hover,
@@ -80,182 +140,335 @@ body {
     background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* --------------------------------------------------------------------------
-   CARDS E SUPERFÍCIES
-   -------------------------------------------------------------------------- */
-.card {
-    background-color: var(--color-card-bg);
-    border: 1px solid var(--color-border) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 16px rgba(45, 30, 95, 0.05) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.navbar-custom .user-pill {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.card:hover {
-    box-shadow: 0 6px 20px rgba(45, 30, 95, 0.08) !important;
+/* --------------------------------------------------------------------------
+   CARDS DE INDICADORES (KPIs)
+   -------------------------------------------------------------------------- */
+.kpi-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(26, 16, 60, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03), 0 14px 30px rgba(26, 16, 60, 0.08);
+}
+
+.kpi-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.kpi-icon-purple {
+    background-color: var(--brand-primary-soft);
+    color: var(--brand-primary);
+}
+
+.kpi-icon-green {
+    background-color: #ECFDF5;
+    color: #059669;
+}
+
+.kpi-icon-amber {
+    background-color: var(--brand-accent-soft);
+    color: #D97706;
+}
+
+.kpi-icon-red {
+    background-color: #FEF2F2;
+    color: #DC2626;
+}
+
+.kpi-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.kpi-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-heading);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+/* --------------------------------------------------------------------------
+   CARDS PADRÃO E PAINÉIS
+   -------------------------------------------------------------------------- */
+.card {
+    background-color: var(--surface-card);
+    border: 1px solid var(--surface-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 8px 20px rgba(26, 16, 60, 0.04) !important;
 }
 
 .card-header {
     background-color: #FFFFFF !important;
-    border-bottom: 1px solid var(--color-border) !important;
-    border-top-left-radius: 12px !important;
-    border-top-right-radius: 12px !important;
+    border-bottom: 1px solid var(--surface-border) !important;
+    border-top-left-radius: 16px !important;
+    border-top-right-radius: 16px !important;
+    padding: 1rem 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   TABELAS MODERNAS
+   -------------------------------------------------------------------------- */
+.table-responsive {
+    border-radius: 16px;
+}
+
+.table {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.table thead th {
+    background-color: #F8FAFC !important;
+    color: #475569 !important;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--surface-border) !important;
+    padding: 0.85rem 1.1rem;
+    white-space: nowrap;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(108, 92, 231, 0.03) !important;
+}
+
+.table tbody td {
+    padding: 0.95rem 1.1rem;
+    border-bottom: 1px solid var(--surface-border);
+    font-size: 0.9rem;
 }
 
 /* --------------------------------------------------------------------------
    BOTÕES PERSONALIZADOS
    -------------------------------------------------------------------------- */
 .btn {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 10px !important;
+    padding: 0.55rem 1.15rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
     border-radius: 8px !important;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
 }
 
 .btn-primary {
-    background-color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, #5844D6 100%) !important;
+    border: none !important;
     color: #FFFFFF !important;
-    box-shadow: 0 2px 8px rgba(108, 92, 231, 0.25);
+    box-shadow: 0 2px 8px rgba(108, 92, 231, 0.28);
 }
 
 .btn-primary:hover, .btn-primary:focus {
-    background-color: var(--color-primary-hover) !important;
-    border-color: var(--color-primary-hover) !important;
+    background: linear-gradient(135deg, #5844D6 0%, #4834D4 100%) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.35);
+    box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
 }
 
 .btn-outline-primary {
-    color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
+    color: var(--brand-primary) !important;
+    border: 1.5px solid var(--brand-primary) !important;
+    background: transparent !important;
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--color-primary) !important;
+    background: var(--brand-primary) !important;
     color: #FFFFFF !important;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
 }
 
 .btn-accent {
-    background-color: var(--color-accent-yellow) !important;
-    border-color: var(--color-accent-yellow) !important;
-    color: var(--color-primary-dark) !important;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(253, 203, 110, 0.3);
+    background: linear-gradient(135deg, var(--brand-accent) 0%, #F5B041 100%) !important;
+    border: none !important;
+    color: var(--brand-dark) !important;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(253, 203, 110, 0.35);
 }
 
 .btn-accent:hover {
-    background-color: #F1B850 !important;
-    color: var(--color-primary-dark) !important;
+    background: linear-gradient(135deg, #F5B041 0%, #E67E22 100%) !important;
+    color: var(--brand-dark) !important;
     transform: translateY(-1px);
 }
 
 /* --------------------------------------------------------------------------
-   CAMPOS DE FORMULÁRIO (INPUTS & SELECTS)
+   FORMULÁRIOS & CAMPOS
    -------------------------------------------------------------------------- */
-.form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #D5D1EB;
-    padding: 0.55rem 0.85rem;
-    color: var(--color-text-main);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.2);
-    outline: none;
-}
-
 .form-label {
-    color: var(--color-text-main);
+    font-weight: 600;
+    font-size: 0.825rem;
+    color: var(--text-heading);
     margin-bottom: 0.35rem;
 }
 
-/* --------------------------------------------------------------------------
-   TABELAS E CABEÇALHOS
-   -------------------------------------------------------------------------- */
-.table {
-    color: var(--color-text-main);
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1.5px solid #CBD5E1;
+    padding: 0.6rem 0.95rem;
+    font-size: 0.92rem;
+    color: var(--text-heading);
+    background-color: #FFFFFF;
+    transition: all 0.2s ease;
 }
 
-.table thead th {
-    background-color: var(--color-primary-light) !important;
-    color: var(--color-primary-dark) !important;
-    font-weight: 700;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #DFDCF7 !important;
-    padding: 0.8rem 1rem;
-}
-
-.table tbody tr {
-    transition: background-color 0.15s ease-in-out;
-}
-
-.table-hover tbody tr:hover {
-    background-color: rgba(108, 92, 231, 0.04) !important;
-}
-
-.table td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-border);
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.18);
+    outline: none;
 }
 
 /* --------------------------------------------------------------------------
-   BADGES DE STATUS E DESTAQUE
+   BADGES DE STATUS (ESTILO PILL MODERNO)
    -------------------------------------------------------------------------- */
-.badge-status-ativo {
-    background-color: #D4EDDA !important;
-    color: #155724 !important;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 6px;
-}
-
-.badge-status-pausado {
-    background-color: var(--color-accent-yellow-light) !important;
-    color: #8A5300 !important;
-    border: 1px solid rgba(253, 203, 110, 0.6);
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 6px;
-}
-
-.badge-status-encerrado, .badge-status-inativo, .badge-status-arquivado {
-    background-color: #E9ECEF !important;
-    color: #495057 !important;
-    font-weight: 600;
-    padding: 5px 10px;
-    border-radius: 6px;
-}
-
-.badge-esgotado {
-    background-color: #FFD2D2 !important;
-    color: #900C3F !important;
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.78rem;
     font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 6px;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-ativo {
+    background-color: var(--status-ativo-bg);
+    color: var(--status-ativo-text);
+    border-color: var(--status-ativo-border);
+}
+.status-ativo .status-dot {
+    background-color: #10B981;
+}
+
+.status-pausado {
+    background-color: var(--status-pausado-bg);
+    color: var(--status-pausado-text);
+    border-color: var(--status-pausado-border);
+}
+.status-pausado .status-dot {
+    background-color: #F59E0B;
+}
+
+.status-encerrado, .status-inativo, .status-arquivado {
+    background-color: var(--status-encerrado-bg);
+    color: var(--status-encerrado-text);
+    border-color: var(--status-encerrado-border);
+}
+.status-encerrado .status-dot, .status-inativo .status-dot {
+    background-color: #64748B;
+}
+
+.status-esgotado {
+    background-color: var(--status-esgotado-bg);
+    color: var(--status-esgotado-text);
+    border-color: var(--status-esgotado-border);
+}
+.status-esgotado .status-dot {
+    background-color: #EF4444;
+}
+
+/* --------------------------------------------------------------------------
+   BARRA DE PROGRESSO DE ORÇAMENTO
+   -------------------------------------------------------------------------- */
+.progress-budget {
+    height: 6px;
+    border-radius: 9999px;
+    background-color: #E2E8F0;
+    overflow: hidden;
+}
+
+.progress-budget-bar {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, var(--brand-primary) 0%, #10B981 100%);
+    transition: width 0.3s ease;
+}
+
+.progress-budget-bar.overbudget {
+    background: linear-gradient(90deg, #F59E0B 0%, #EF4444 100%);
 }
 
 /* --------------------------------------------------------------------------
    RODAPÉ INSTITUCIONAL (FOOTER)
    -------------------------------------------------------------------------- */
 .footer-custom {
-    background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1F1542 100%);
-    color: rgba(255, 255, 255, 0.85);
-    border-top: 3px solid var(--color-accent-yellow);
-    padding: 1.5rem 0;
+    background: #110B27;
+    color: #94A3B8;
+    border-top: 3px solid var(--brand-accent);
+    padding: 2rem 0;
     margin-top: auto;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
 }
 
-.footer-custom a {
-    color: var(--color-accent-yellow);
-    text-decoration: none;
+.footer-custom .footer-brand {
+    font-weight: 700;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.footer-custom a:hover {
-    text-decoration: underline;
+.footer-custom .badge-student {
+    background: rgba(253, 203, 110, 0.15);
+    color: var(--brand-accent);
+    border: 1px solid rgba(253, 203, 110, 0.35);
+    border-radius: 9999px;
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 }
