@@ -51,7 +51,9 @@
                         </thead>
                         <tbody>
                         <tr th:each="a : ${anuncios}">
-                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${a.idAnuncio}">#1</td>
+                            <td class="d-none d-sm-table-cell table-nowrap">
+                                <span class="hs-id-badge" th:text="'#' + ${a.idAnuncio}">#1</span>
+                            </td>
                             <td>
                                 <div class="fw-bold text-white" th:text="${a.nomeAnuncio}">Anúncio</div>
                                 <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">

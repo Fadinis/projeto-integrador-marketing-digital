@@ -46,34 +46,36 @@
                 <span th:text="${mensagemErro}"></span>
             </div>
 
-            <!-- Card Tabela SaaS (100% Responsiva em qualquer tamanho no F12) -->
+            <!-- Card Tabela SaaS (100% Responsiva sem comer botões e com ID nítido) -->
             <div class="hs-card">
                 <div class="table-responsive">
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th class="d-none d-sm-table-cell" style="width: 60px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 55px;">ID</th>
                             <th>Campanha</th>
                             <th class="d-none d-md-table-cell">Conta</th>
                             <th class="d-none d-lg-table-cell">Canal / Funil</th>
-                            <th class="table-nowrap">Orçamento</th>
-                            <th class="d-none d-lg-table-cell table-nowrap">Custo Real</th>
-                            <th class="d-none d-md-table-cell" style="min-width: 140px;">Consumo (%)</th>
+                            <th class="table-nowrap">Orçamento & Gasto</th>
+                            <th class="d-none d-md-table-cell" style="width: 120px;">Consumo (%)</th>
                             <th class="table-nowrap">Status</th>
-                            <th class="text-end table-nowrap">Ações</th>
+                            <th class="text-end table-actions-cell">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="c : ${campanhas}">
-                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <!-- ID NÍTIDO COM BADGE DE ALTO CONTRASTE -->
+                            <td class="d-none d-sm-table-cell table-nowrap">
+                                <span class="hs-id-badge" th:text="'#' + ${c.idCampanha}">#1</span>
+                            </td>
                             <td>
                                 <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-bold text-white text-decoration-none"
                                    th:text="${c.nomeCampanha}">Nome</a>
-                                <!-- Informações compactas para celular -->
+                                <!-- Informações compactas para celular/telas pequenas -->
                                 <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">
                                     <span th:text="${c.conta.nomeConta}">Conta</span> &bull; <span th:text="${c.canal}">Canal</span>
                                 </div>
-                                <div class="small d-none d-sm-block" style="color: var(--hs-text-muted);">
+                                <div class="small d-none d-sm-block mt-1" style="color: var(--hs-text-muted);">
                                     <i class="bi bi-calendar-event me-1"></i>
                                     <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> até
                                     <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
@@ -87,11 +89,14 @@
                                       th:text="${c.canal}">Canal</span>
                                 <div class="small" style="color: var(--hs-text-muted);" th:text="${c.posicaoFunil}">Funil</div>
                             </td>
-                            <td class="fw-bold text-white table-nowrap">
-                                R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
-                            </td>
-                            <td class="d-none d-lg-table-cell fw-semibold table-nowrap" style="color: var(--hs-text-muted);">
-                                R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
+                            <!-- ORÇAMENTO E CUSTO INTEGRADOS COMPACTOS -->
+                            <td class="table-nowrap">
+                                <div class="fw-bold text-white">
+                                    R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
+                                </div>
+                                <div class="small" style="color: var(--hs-text-muted);">
+                                    Gasto: R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
+                                </div>
                             </td>
                             <td class="d-none d-md-table-cell">
                                 <div class="d-flex align-items-center justify-content-between mb-1">
@@ -113,25 +118,26 @@
                                     <span th:text="${c.statusCampanha}">STATUS</span>
                                 </span>
                             </td>
-                            <td class="text-end table-nowrap">
+                            <!-- BOTÕES DE AÇÃO COMPACTOS E NUNCA CORTADOS -->
+                            <td class="table-actions-cell">
                                 <div class="btn-group btn-group-sm">
                                     <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn-hs-outline" title="Ver detalhes do funil">
-                                        <i class="bi bi-eye"></i> Detalhes
+                                        <i class="bi bi-eye"></i> <span class="d-none d-xl-inline">Detalhes</span>
                                     </a>
                                     <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
                                        th:href="@{/campanhas/{id}/editar(id=${c.idCampanha})}"
-                                       class="btn-hs-outline ms-1" title="Editar">
+                                       class="btn-hs-outline" title="Editar">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+                                    <form sec:authorize="hasRole('ADMIN')"
+                                          th:action="@{/campanhas/{id}/excluir(id=${c.idCampanha})}"
+                                          method="post" class="d-inline m-0"
+                                          onsubmit="return confirm('Deseja realmente excluir esta campanha?');">
+                                        <button type="submit" class="btn-hs-outline text-danger border-start-0" title="Excluir campanha">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                                <form sec:authorize="hasRole('ADMIN')"
-                                      th:action="@{/campanhas/{id}/excluir(id=${c.idCampanha})}"
-                                      method="post" class="d-inline ms-1"
-                                      onsubmit="return confirm('Deseja realmente excluir esta campanha?');">
-                                    <button type="submit" class="btn-hs-outline text-danger" title="Excluir campanha">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                         </tbody>

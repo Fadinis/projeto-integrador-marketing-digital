@@ -46,9 +46,14 @@
             <i class="bi bi-gear-fill"></i>
         </button>
         <div class="sidebar-divider" style="width: 32px; height: 1px; background-color: var(--hs-border); margin: 0.15rem 0;"></div>
-        <div class="sidebar-avatar" title="Eduardo Marques Fadini (RA 42721)">
-            EF
+        
+        <!-- AVATAR DINÂMICO CONFORME O USUÁRIO CONECTADO (AD / GM / AN) -->
+        <div class="sidebar-avatar" title="Perfil Conectado">
+            <span sec:authorize="hasRole('ADMIN')">AD</span>
+            <span sec:authorize="hasRole('GESTOR_MARKETING') and !hasRole('ADMIN')">GM</span>
+            <span sec:authorize="hasRole('ANALISTA') and !hasRole('ADMIN') and !hasRole('GESTOR_MARKETING')">AN</span>
         </div>
+
         <!-- BOTÃO DE LOGOUT DE ALTA VISIBILIDADE -->
         <form th:action="@{/logout}" method="post" class="m-0">
             <button type="submit" class="sidebar-logout-btn" title="Sair do Sistema (Logout)">
@@ -58,28 +63,36 @@
     </div>
 </aside>
 
-<!-- TOPBAR SUPERIOR (SEM DUPLICIDADE DE BOTÃO DE CONFIGURAÇÃO) -->
+<!-- TOPBAR SUPERIOR (COM DADOS DINÂMICOS DO USUÁRIO CONECTADO) -->
 <header th:fragment="topbar(pageTitle)" class="app-topbar">
     <div class="user-welcome-box">
         <div class="user-welcome-avatar">
-            <i class="bi bi-person-fill"></i>
+            <span sec:authorize="hasRole('ADMIN')">AD</span>
+            <span sec:authorize="hasRole('GESTOR_MARKETING') and !hasRole('ADMIN')">GM</span>
+            <span sec:authorize="hasRole('ANALISTA') and !hasRole('ADMIN') and !hasRole('GESTOR_MARKETING')">AN</span>
         </div>
         <div>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-                <h6 class="fw-bold text-white mb-0" th:text="${pageTitle != null ? pageTitle : 'Eduardo Marques Fadini'}">Eduardo Marques Fadini</h6>
+                <h6 class="fw-bold text-white mb-0">
+                    <span sec:authorize="hasRole('ADMIN')">Administrador</span>
+                    <span sec:authorize="hasRole('GESTOR_MARKETING') and !hasRole('ADMIN')">Gestor de Marketing</span>
+                    <span sec:authorize="hasRole('ANALISTA') and !hasRole('ADMIN') and !hasRole('GESTOR_MARKETING')">Analista de Dados</span>
+                </h6>
                 
                 <!-- Role Tag Específica e Bonita -->
                 <span sec:authorize="hasRole('ADMIN')" class="hs-role-badge role-admin">
                     <i class="bi bi-shield-fill-check"></i> Administrador
                 </span>
                 <span sec:authorize="hasRole('GESTOR_MARKETING') and !hasRole('ADMIN')" class="hs-role-badge role-gestor">
-                    <i class="bi bi-briefcase-fill"></i> Gestor de Marketing
+                    <i class="bi bi-briefcase-fill"></i> Gestor
                 </span>
                 <span sec:authorize="hasRole('ANALISTA') and !hasRole('ADMIN') and !hasRole('GESTOR_MARKETING')" class="hs-role-badge role-analista">
                     <i class="bi bi-graph-up"></i> Analista
                 </span>
             </div>
-            <div class="small" style="color: var(--hs-text-muted);">Plataforma de Performance & Atribuição de Marketing 👋</div>
+            <div class="small" style="color: var(--hs-text-muted);">
+                <span sec:authentication="name">usuario@eseg.edu.br</span> &bull; Marketing Analytics 👋
+            </div>
         </div>
     </div>
 
@@ -111,8 +124,9 @@
                         <i class="bi bi-mortarboard-fill text-warning me-1"></i> Projeto Integrador Full Stack (ESEG 2026)
                     </div>
                     <div class="small" style="color: var(--hs-text-muted);">
-                        <strong>Autor:</strong> Eduardo Marques Fadini &bull; <strong>RA:</strong> 42721<br>
-                        <strong>Curso:</strong> Engenharia de Computação &bull; Programação Web
+                        <strong>Aluno / Autor:</strong> Eduardo Marques Fadini &bull; <strong>RA:</strong> 42721<br>
+                        <strong>Curso:</strong> Engenharia de Computação &bull; Programação Web<br>
+                        <strong>Usuário Autenticado:</strong> <span class="text-white fw-bold" sec:authentication="name">admin@eseg.edu.br</span>
                     </div>
                 </div>
 

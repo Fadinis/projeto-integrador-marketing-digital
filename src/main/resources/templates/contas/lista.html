@@ -61,7 +61,9 @@
                         </thead>
                         <tbody>
                         <tr th:each="ct : ${contas}">
-                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${ct.idConta}">#1</td>
+                            <td class="d-none d-sm-table-cell table-nowrap">
+                                <span class="hs-id-badge" th:text="'#' + ${ct.idConta}">#1</span>
+                            </td>
                             <td>
                                 <div class="fw-bold text-white" th:text="${ct.nomeConta}">Conta</div>
                                 <div class="small d-md-none mt-1" style="color: var(--hs-text-muted);">

@@ -210,19 +210,21 @@
                     <table class="table-dark-saas">
                         <thead>
                         <tr>
-                            <th class="d-none d-sm-table-cell" style="width: 60px;">ID</th>
+                            <th class="d-none d-sm-table-cell" style="width: 55px;">ID</th>
                             <th>Campanha</th>
                             <th class="d-none d-md-table-cell">Conta Anunciante</th>
                             <th class="d-none d-lg-table-cell">Canal</th>
                             <th class="d-none d-xl-table-cell">Período</th>
                             <th>Orçamento Planejado</th>
                             <th>Status</th>
-                            <th class="text-end">Ações</th>
+                            <th class="text-end table-actions-cell">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="c : ${campanhasRecentes}">
-                            <td class="d-none d-sm-table-cell text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <td class="d-none d-sm-table-cell table-nowrap">
+                                <span class="hs-id-badge" th:text="'#' + ${c.idCampanha}">#1</span>
+                            </td>
                             <td>
                                 <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}"
                                    class="fw-bold text-white text-decoration-none"
