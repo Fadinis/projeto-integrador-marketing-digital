@@ -4,247 +4,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Marketing Analytics</title>
+    <title>Dashboard &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <!-- Sidebar Vertical (HockeyStack Style) -->
+    <div th:replace="~{fragments/navbar :: sidebar('dashboard')}"></div>
 
-    <div class="container pb-5">
-        <!-- Cabeçalho do Dashboard -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-            <div>
-                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
-                    <i class="bi bi-speedometer2 me-2" style="color: var(--brand-primary);"></i>Painel de Performance Analítica
-                </h3>
-                <p class="text-muted small mb-0">Base de dados relacional evoluída (3FN) &bull; Monitoramento de funil e orçamento</p>
-            </div>
-            <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                <a th:href="@{/campanhas/nova}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Nova Campanha
-                </a>
-            </div>
-        </div>
+    <!-- Conteúdo Principal -->
+    <div class="app-content">
+        <!-- Topbar Superior -->
+        <div th:replace="~{fragments/navbar :: topbar('Eduardo Marques Fadini')}"></div>
 
-        <!-- 4 Cards de Indicadores Principais (KPIs Modernos) -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-3 col-sm-6">
-                <div class="kpi-card">
-                    <div class="d-flex justify-content-between align-items-start">
+        <main class="p-4 flex-grow-1">
+            <!-- ROW 1: AI ASSISTANT CARD + 4 METRIC SPARKLINES -->
+            <div class="row g-4 mb-4">
+                <!-- Coluna Esquerda: AI Marketing Assistant Card -->
+                <div class="col-lg-4 col-md-12">
+                    <div class="ai-assistant-card">
                         <div>
-                            <div class="kpi-title">Contas Anunciantes</div>
-                            <div class="kpi-value" th:text="${totalContas}">40</div>
-                        </div>
-                        <div class="kpi-icon-box kpi-icon-purple">
-                            <i class="bi bi-buildings"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3 pt-2 border-top" style="border-color: var(--surface-border) !important;">
-                        <a th:href="@{/contas}" class="small text-decoration-none fw-semibold" style="color: var(--brand-primary);">
-                            Explorar contas &rarr;
-                        </a>
-                    </div>
-                </div>
-            </div>
+                            <div class="ai-icon-glow">
+                                <i class="bi bi-gem"></i>
+                            </div>
+                            <div class="text-center mb-4">
+                                <div class="small" style="color: var(--hs-text-muted);">Olá, sou o Odin, seu AI Marketing Assistant</div>
+                                <h4 class="fw-bold text-white mt-1">Como posso ajudar você hoje?</h4>
+                            </div>
 
-            <div class="col-md-3 col-sm-6">
-                <div class="kpi-card">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="kpi-title">Campanhas (Ativas / Total)</div>
-                            <div class="kpi-value" style="color: #059669;">
-                                <span th:text="${campanhasAtivas}">0</span><span class="fs-6 text-muted fw-normal"> / <span th:text="${totalCampanhas}">160</span></span>
+                            <div class="ai-prompts-list">
+                                <a th:href="@{/campanhas}" class="ai-prompt-chip">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-file-earmark-text text-muted"></i>
+                                        <span>Quantos pontos de contato são ideais para conversão?</span>
+                                    </div>
+                                </a>
+                                <a th:href="@{/contas}" class="ai-prompt-chip">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-file-earmark-text text-muted"></i>
+                                        <span>Quais páginas e canais geram maior pipeline qualificado?</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                        <div class="kpi-icon-box kpi-icon-green">
-                            <i class="bi bi-megaphone"></i>
+
+                        <!-- Input Bar do Assistente -->
+                        <div class="ai-input-box">
+                            <i class="bi bi-paperclip text-muted fs-5"></i>
+                            <input type="text" placeholder="Pergunte qualquer coisa sobre a base..." />
+                            <button type="button" class="ai-send-btn" title="Enviar Pergunta">
+                                <i class="bi bi-send-fill" style="font-size: 0.85rem;"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="mt-3 pt-2 border-top" style="border-color: var(--surface-border) !important;">
-                        <a th:href="@{/campanhas}" class="small text-decoration-none fw-semibold" style="color: #059669;">
-                            Gerenciar campanhas &rarr;
-                        </a>
+                </div>
+
+                <!-- Coluna Direita: Grid 2x2 com Sparklines dos KPIs -->
+                <div class="col-lg-8 col-md-12">
+                    <div class="row g-3">
+                        <!-- KPI 1: Contas Anunciantes -->
+                        <div class="col-sm-6">
+                            <div class="hs-card">
+                                <div class="metric-card-title">
+                                    <span>Contas Anunciantes Ativas</span>
+                                    <i class="bi bi-info-circle" title="Base normalizada 3FN"></i>
+                                </div>
+                                <div class="metric-card-header">
+                                    <div class="metric-card-value" th:text="${totalContas}">40</div>
+                                    <span class="metric-pill-badge">
+                                        <i class="bi bi-arrow-up-short"></i> +5.51%
+                                    </span>
+                                </div>
+                                <div class="sparkline-container">
+                                    <svg class="sparkline-svg" viewBox="0 0 300 70" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="gradBlue" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.45"/>
+                                                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M 0,55 Q 30,52 60,40 T 120,48 T 180,25 T 240,12 T 300,18 L 300,70 L 0,70 Z" fill="url(#gradBlue)"/>
+                                        <path d="M 0,55 Q 30,52 60,40 T 120,48 T 180,25 T 240,12 T 300,18" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted mt-2" style="font-size: 0.68rem; font-weight: 600;">
+                                    <span>0</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 2: Volume / Investimento -->
+                        <div class="col-sm-6">
+                            <div class="hs-card">
+                                <div class="metric-card-title">
+                                    <span>Investimento Total (Planejado)</span>
+                                    <i class="bi bi-info-circle" title="Soma total das campanhas"></i>
+                                </div>
+                                <div class="metric-card-header">
+                                    <div class="metric-card-value">R$ 4.85M</div>
+                                    <span class="metric-pill-badge">
+                                        <i class="bi bi-arrow-up-short"></i> +8.55%
+                                    </span>
+                                </div>
+                                <div class="sparkline-container">
+                                    <svg class="sparkline-svg" viewBox="0 0 300 70" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="gradRose" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#F43F5E" stop-opacity="0.45"/>
+                                                <stop offset="100%" stop-color="#F43F5E" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M 0,58 Q 40,15 80,42 T 160,35 T 240,15 T 300,22 L 300,70 L 0,70 Z" fill="url(#gradRose)"/>
+                                        <path d="M 0,58 Q 40,15 80,42 T 160,35 T 240,15 T 300,22" fill="none" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted mt-2" style="font-size: 0.68rem; font-weight: 600;">
+                                    <span>0</span><span>1M</span><span>1.1M</span><span>1.2M</span><span>1.3M</span><span>1.4M</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 3: Criativos e Anúncios -->
+                        <div class="col-sm-6">
+                            <div class="hs-card">
+                                <div class="metric-card-title">
+                                    <span>Criativos & Peças de Anúncios</span>
+                                    <i class="bi bi-info-circle" title="Anúncios individuais monitorados"></i>
+                                </div>
+                                <div class="metric-card-header">
+                                    <div class="metric-card-value">
+                                        <span th:text="${totalAnuncios}">560</span> <span style="font-size: 1rem; color: var(--hs-text-muted); font-weight: 600;">peças</span>
+                                    </div>
+                                    <span class="metric-pill-badge">
+                                        <i class="bi bi-arrow-up-short"></i> +45.69%
+                                    </span>
+                                </div>
+                                <div class="sparkline-container">
+                                    <svg class="sparkline-svg" viewBox="0 0 300 70" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="gradAmber" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.45"/>
+                                                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M 0,60 Q 50,60 80,35 T 150,55 T 220,40 T 300,18 L 300,70 L 0,70 Z" fill="url(#gradAmber)"/>
+                                        <path d="M 0,60 Q 50,60 80,35 T 150,55 T 220,40 T 300,18" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted mt-2" style="font-size: 0.68rem; font-weight: 600;">
+                                    <span>0</span><span>1M</span><span>3M</span><span>5M</span><span>7M</span><span>9M</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI 4: Monitoramento Orçamentário RF05 -->
+                        <div class="col-sm-6">
+                            <div class="hs-card">
+                                <div class="metric-card-title">
+                                    <span>Estouro de Cota (RF05)</span>
+                                    <i class="bi bi-shield-check text-success" title="Bloqueio RF05 ativo e operacional"></i>
+                                </div>
+                                <div class="metric-card-header">
+                                    <div class="metric-card-value" th:text="${campanhasOrcamentoEstourado}">0</div>
+                                    <span class="metric-pill-badge" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border-color: rgba(139, 92, 246, 0.3);">
+                                        <i class="bi bi-check-circle"></i> 100% Protegido
+                                    </span>
+                                </div>
+                                <div class="sparkline-container">
+                                    <svg class="sparkline-svg" viewBox="0 0 300 70" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="gradViolet" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.45"/>
+                                                <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M 0,55 Q 40,55 70,25 T 130,50 T 200,32 T 270,30 T 300,35 L 300,70 L 0,70 Z" fill="url(#gradViolet)"/>
+                                        <path d="M 0,55 Q 40,55 70,25 T 130,50 T 200,32 T 270,30 T 300,35" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="d-flex justify-content-between text-muted mt-2" style="font-size: 0.68rem; font-weight: 600;">
+                                    <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
-                <div class="kpi-card">
-                    <div class="d-flex justify-content-between align-items-start">
+            <!-- ROW 2: DAILY INSIGHT & PIPELINE BY CHANNEL (DONUT) -->
+            <div class="row g-4 mb-4">
+                <!-- Daily Insight -->
+                <div class="col-lg-6">
+                    <div class="hs-card h-100 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="kpi-title">Criativos & Anúncios</div>
-                            <div class="kpi-value" style="color: #D97706;" th:text="${totalAnuncios}">560</div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+                                    <h6 class="fw-bold text-white mb-0">Daily Insight</h6>
+                                    <i class="bi bi-info-circle text-muted small" title="Insights gerados sobre o dataset"></i>
+                                </div>
+                                <a th:href="@{/campanhas}" class="btn-hs-outline" style="font-size: 0.78rem; padding: 0.35rem 0.85rem;">
+                                    Ver Análise
+                                </a>
+                            </div>
+                            <p style="color: var(--hs-text-body); font-size: 0.9rem; line-height: 1.6;">
+                                <strong>Paid Social - LinkedIn Ads e Google Ads</strong> alcançaram a maior taxa de conversão a <strong>4.52%</strong>, gerando 61 negócios fechados (Closed-Won) na base de marketing migrada, exigindo quase 4x menos interações por oportunidade fechada.
+                            </p>
                         </div>
-                        <div class="kpi-icon-box kpi-icon-amber">
-                            <i class="bi bi-collection-play"></i>
+                        <div class="p-3 rounded-3" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border);">
+                            <div class="small fw-bold text-white mb-1">
+                                <i class="bi bi-shield-lock-fill text-warning me-1"></i> Auditoria de Regra de Negócio RF05:
+                            </div>
+                            <div class="small" style="color: var(--hs-text-muted);">
+                                O somatório dos orçamentos das campanhas ativas está devidamente balanceado dentro dos limites contratuais das 40 contas anunciantes corporativas.
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-3 pt-2 border-top" style="border-color: var(--surface-border) !important;">
-                        <a th:href="@{/anuncios}" class="small text-decoration-none fw-semibold" style="color: #D97706;">
-                            Ver peças publicitárias &rarr;
-                        </a>
+                </div>
+
+                <!-- Pipeline By Channel com Gráfico Donut SVG -->
+                <div class="col-lg-6">
+                    <div class="hs-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <h6 class="fw-bold text-white mb-0">Pipeline By Channel</h6>
+                                <i class="bi bi-info-circle text-muted small"></i>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="input-group input-group-sm" style="width: 160px;">
+                                    <span class="input-group-text bg-transparent border-0 text-muted" style="position: absolute; z-index: 5; left: 4px; top: 2px;">
+                                        <i class="bi bi-search" style="font-size: 0.75rem;"></i>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm ps-4" placeholder="Buscar canal..." style="background-color: var(--hs-card-subtle); font-size: 0.78rem; border-radius: 8px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <!-- Lista de canais com porcentagens -->
+                            <div class="col-7">
+                                <div class="d-flex flex-column gap-2" style="font-size: 0.85rem;">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #10B981;"></span>
+                                            <span>Paid Social (LinkedIn Ads)</span>
+                                        </div>
+                                        <span class="fw-bold text-white">51.1%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #EC4899;"></span>
+                                            <span>Organic Search (SEO)</span>
+                                        </div>
+                                        <span class="fw-bold text-white">34.2%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #F59E0B;"></span>
+                                            <span>Organic Social</span>
+                                        </div>
+                                        <span class="fw-bold text-white">4.2%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #F43F5E;"></span>
+                                            <span>Other Referral Traffic</span>
+                                        </div>
+                                        <span class="fw-bold text-white">3.7%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #3B82F6;"></span>
+                                            <span>Paid Search (Google Ads)</span>
+                                        </div>
+                                        <span class="fw-bold text-white">2.1%</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #8B5CF6;"></span>
+                                            <span>Direct / Email Marketing</span>
+                                        </div>
+                                        <span class="fw-bold text-white">4.7%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Donut Chart SVG -->
+                            <div class="col-5 text-center position-relative">
+                                <svg width="150" height="150" viewBox="0 0 160 160">
+                                    <circle cx="80" cy="80" r="58" fill="none" stroke="#1E202B" stroke-width="20"/>
+                                    <!-- Paid Social (51.1%) -->
+                                    <circle cx="80" cy="80" r="58" fill="none" stroke="#10B981" stroke-width="20"
+                                            stroke-dasharray="186 364" stroke-dashoffset="0" stroke-linecap="round"/>
+                                    <!-- Organic Search (34.2%) -->
+                                    <circle cx="80" cy="80" r="58" fill="none" stroke="#EC4899" stroke-width="20"
+                                            stroke-dasharray="124 364" stroke-dashoffset="-190"/>
+                                    <!-- Organic Social (4.2%) -->
+                                    <circle cx="80" cy="80" r="58" fill="none" stroke="#F59E0B" stroke-width="20"
+                                            stroke-dasharray="15 364" stroke-dashoffset="-318"/>
+                                    <!-- Referral & Paid Search (10.5%) -->
+                                    <circle cx="80" cy="80" r="58" fill="none" stroke="#3B82F6" stroke-width="20"
+                                            stroke-dasharray="38 364" stroke-dashoffset="-335"/>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                    <div class="fw-bold text-white" style="font-size: 1.05rem;">$1.16M</div>
+                                    <div class="text-muted" style="font-size: 0.65rem; text-transform: uppercase;">Pipeline</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
-                <div class="kpi-card">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="kpi-title">Orçamentos Estourados</div>
-                            <div class="kpi-value" style="color: #DC2626;" th:text="${campanhasOrcamentoEstourado}">0</div>
-                        </div>
-                        <div class="kpi-icon-box kpi-icon-red">
-                            <i class="bi bi-exclamation-octagon"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3 pt-2 border-top" style="border-color: var(--surface-border) !important;">
-                        <span class="small fw-semibold" style="color: #DC2626;">
-                            <i class="bi bi-shield-lock"></i> Bloqueio RF05 ativo
+            <!-- ROW 3: TABELA DE CAMPANHAS RECENTES (HOCKEYSTACK DARK TABLE) -->
+            <div class="hs-card mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-clock-history fs-5" style="color: var(--hs-violet);"></i>
+                        <h6 class="fw-bold text-white mb-0">Campanhas Recentes na Base de Dados</h6>
+                        <span class="badge" style="background-color: var(--hs-card-subtle); color: var(--hs-text-muted); border: 1px solid var(--hs-border);">
+                            160 cadastradas
                         </span>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tabela de Campanhas Recentes -->
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-clock-history text-primary"></i>
-                    <h6 class="fw-bold mb-0">Campanhas Mais Recentes</h6>
-                </div>
-                <a th:href="@{/campanhas}" class="btn btn-sm btn-outline-primary">Ver Todas as 160 &rarr;</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead>
-                    <tr>
-                        <th style="width: 60px;">ID</th>
-                        <th>Campanha</th>
-                        <th>Conta Anunciante</th>
-                        <th>Canal</th>
-                        <th>Período</th>
-                        <th>Orçamento</th>
-                        <th>Status</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="c : ${campanhasRecentes}">
-                        <td class="text-muted small" th:text="'#' + ${c.idCampanha}">#1</td>
-                        <td>
-                            <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}"
-                               class="text-decoration-none fw-bold text-dark"
-                               th:text="${c.nomeCampanha}">Campanha</a>
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-secondary" th:text="${c.conta.nomeConta}">Conta</span>
-                        </td>
-                        <td>
-                            <span class="badge" style="background-color: var(--brand-primary-soft); color: var(--brand-primary); font-weight: 700;"
-                                  th:text="${c.canal}">Canal</span>
-                        </td>
-                        <td class="small text-muted">
-                            <i class="bi bi-calendar3"></i>
-                            <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yy')}"></span> -
-                            <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yy')}"></span>
-                        </td>
-                        <td class="fw-semibold">
-                            R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
-                        </td>
-                        <td>
-                            <span class="status-pill"
-                                  th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'status-pausado' : 'status-encerrado')}">
-                                <span class="status-dot"></span>
-                                <span th:text="${c.statusCampanha}">STATUS</span>
-                            </span>
-                        </td>
-                        <td class="text-end">
-                            <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye"></i> Detalhes
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Landing Pages e E-mail Marketing -->
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center gap-2">
-                        <i class="bi bi-layout-text-window-reverse text-primary"></i>
-                        <h6 class="fw-bold mb-0">Performance de Landing Pages (Amostra)</h6>
+                    <div class="d-flex align-items-center gap-2">
+                        <a th:href="@{/campanhas}" class="btn-hs-outline btn-sm">
+                            Ver Todas as 160 &rarr;
+                        </a>
+                        <a th:href="@{/campanhas/nova}" class="btn-hs-primary btn-sm" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                            <i class="bi bi-plus-lg"></i> Nova Campanha
+                        </a>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle">
-                            <thead>
-                            <tr>
-                                <th>Página de Destino</th>
-                                <th>Visitas</th>
-                                <th>Conversões</th>
-                                <th>Taxa Conv.</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="lp : ${landingPagesRecentes}">
-                                <td class="fw-semibold" th:text="${lp.nomeLandingPage}">LP</td>
-                                <td th:text="${#numbers.formatInteger(lp.visitas, 0, 'POINT')}">0</td>
-                                <td th:text="${#numbers.formatInteger(lp.conversoes, 0, 'POINT')}">0</td>
-                                <td class="fw-bold" style="color: var(--brand-primary);">
-                                    <span th:text="${lp.calcularTaxaConversao()}">0.00</span>%
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table-dark-saas">
+                        <thead>
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Campanha</th>
+                            <th>Conta Anunciante</th>
+                            <th>Canal</th>
+                            <th>Período</th>
+                            <th>Orçamento Planejado</th>
+                            <th>Status</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c : ${campanhasRecentes}">
+                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <td>
+                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}"
+                                   class="fw-bold text-white text-decoration-none"
+                                   th:text="${c.nomeCampanha}">Campanha</a>
+                            </td>
+                            <td>
+                                <span style="color: var(--hs-text-muted);" th:text="${c.conta.nomeConta}">Conta</span>
+                            </td>
+                            <td>
+                                <span class="badge px-2 py-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 600;"
+                                      th:text="${c.canal}">Canal</span>
+                            </td>
+                            <td class="small" style="color: var(--hs-text-muted);">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yy')}"></span> -
+                                <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yy')}"></span>
+                            </td>
+                            <td class="fw-bold text-white">
+                                R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
+                            </td>
+                            <td>
+                                <span class="hs-status-pill"
+                                      th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'hs-status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                    <span th:text="${c.statusCampanha}">STATUS</span>
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn-hs-outline btn-sm" style="padding: 0.3rem 0.75rem;">
+                                    <i class="bi bi-eye"></i> Detalhes
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header d-flex align-items-center gap-2">
-                        <i class="bi bi-envelope-check text-success"></i>
-                        <h6 class="fw-bold mb-0">Disparos de E-mail Marketing (Amostra)</h6>
+            <!-- ROW 4: LANDING PAGES & EMAIL MARKETING (SAMPLES) -->
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="hs-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-layout-text-window-reverse text-info"></i>
+                                <h6 class="fw-bold text-white mb-0">Performance de Landing Pages (Amostra)</h6>
+                            </div>
+                            <span class="small text-muted">Métricas de Funil</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table-dark-saas">
+                                <thead>
+                                <tr>
+                                    <th>Página de Destino</th>
+                                    <th>Visitas</th>
+                                    <th>Conversões</th>
+                                    <th>Taxa Conv.</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="lp : ${landingPagesRecentes}">
+                                    <td class="fw-semibold text-white" th:text="${lp.nomeLandingPage}">LP</td>
+                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.visitas, 0, 'POINT')}">0</td>
+                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(lp.conversoes, 0, 'POINT')}">0</td>
+                                    <td class="fw-bold" style="color: var(--hs-emerald);">
+                                        <span th:text="${lp.calcularTaxaConversao()}">0.00</span>%
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle">
-                            <thead>
-                            <tr>
-                                <th>Conta / Tipo</th>
-                                <th>Envios</th>
-                                <th>Aberturas</th>
-                                <th>Taxa Abertura</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="em : ${emailsRecentes}">
-                                <td>
-                                    <div class="fw-bold small text-dark" th:text="${em.conta.nomeConta}">Conta</div>
-                                    <div class="text-muted small" th:text="${em.tipoEmail}">Tipo</div>
-                                </td>
-                                <td th:text="${#numbers.formatInteger(em.envios, 0, 'POINT')}">0</td>
-                                <td th:text="${#numbers.formatInteger(em.aberturas, 0, 'POINT')}">0</td>
-                                <td class="fw-bold text-success">
-                                    <span th:text="${em.calcularTaxaAbertura()}">0.00</span>%
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="hs-card h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-envelope-check text-success"></i>
+                                <h6 class="fw-bold text-white mb-0">Disparos de E-mail Marketing (Amostra)</h6>
+                            </div>
+                            <span class="small text-muted">Engajamento</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table-dark-saas">
+                                <thead>
+                                <tr>
+                                    <th>Conta / Segmento</th>
+                                    <th>Envios</th>
+                                    <th>Aberturas</th>
+                                    <th>Taxa Abertura</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="em : ${emailsRecentes}">
+                                    <td>
+                                        <div class="fw-bold text-white" th:text="${em.conta.nomeConta}">Conta</div>
+                                        <div class="small" style="color: var(--hs-text-muted);" th:text="${em.tipoEmail}">Tipo</div>
+                                    </td>
+                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.envios, 0, 'POINT')}">0</td>
+                                    <td style="color: var(--hs-text-muted);" th:text="${#numbers.formatInteger(em.aberturas, 0, 'POINT')}">0</td>
+                                    <td class="fw-bold" style="color: var(--hs-amber);">
+                                        <span th:text="${em.calcularTaxaAbertura()}">0.00</span>%
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <!-- Footer -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

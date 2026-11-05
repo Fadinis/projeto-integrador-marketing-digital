@@ -3,107 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Conta — Marketing Analytics</title>
+    <title>Formulário de Conta &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <div th:replace="~{fragments/navbar :: sidebar('contas')}"></div>
 
-    <div class="container pb-5" style="max-width: 740px;">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
-                <i class="bi bi-buildings text-primary fs-5"></i>
-                <h5 class="fw-bold mb-0" style="color: var(--text-heading);"
-                    th:text="${conta.idConta == null ? 'Nova Conta Anunciante' : 'Editar Conta #' + conta.idConta}">Conta</h5>
-            </div>
-            <div class="card-body p-4">
+    <div class="app-content">
+        <div th:replace="~{fragments/navbar :: topbar(${conta.idConta == null ? 'Nova Conta' : 'Editar Conta'})}"></div>
 
-                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm mb-4">
+        <main class="p-4 flex-grow-1 d-flex justify-content-center">
+            <div style="width: 100%; max-width: 780px;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1"
+                            th:text="${conta.idConta == null ? 'Nova Conta Anunciante' : 'Editar Conta #' + conta.idConta}">Conta</h4>
+                        <p class="small mb-0" style="color: var(--hs-text-muted);">Cadastro de entidade de anunciante e Value Object de localização</p>
+                    </div>
+                    <a th:href="@{/contas}" class="btn-hs-outline">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+                </div>
+
+                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-4"
+                     style="background-color: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; border-radius: 12px;">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <span th:text="${mensagemErro}"></span>
                 </div>
 
-                <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
-                    <input type="hidden" th:field="*{idConta}">
+                <div class="hs-card">
+                    <form th:action="@{/contas/salvar}" th:object="${conta}" method="post">
+                        <input type="hidden" th:field="*{idConta}">
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Nome da Conta *</label>
-                            <input type="text" class="form-control" th:field="*{nomeConta}" placeholder="Ex: Tech Solutions Ltda" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('nomeConta')}" th:errors="*{nomeConta}"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nome da Conta *</label>
+                                <input type="text" class="form-control" th:field="*{nomeConta}" placeholder="Ex: Tech Solutions Ltda" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('nomeConta')}" th:errors="*{nomeConta}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Segmento *</label>
+                                <input type="text" class="form-control" th:field="*{segmento}" placeholder="Ex: Tecnologia, Finanças, Varejo" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Produto Principal *</label>
+                                <input type="text" class="form-control" th:field="*{produtoPrincipal}" placeholder="Ex: Plataforma SaaS" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Porte da Empresa *</label>
+                                <select class="form-select" th:field="*{porteEmpresa}" required>
+                                    <option value="Pequeno porte">Pequeno porte</option>
+                                    <option value="Médio porte">Médio porte</option>
+                                    <option value="Grande porte">Grande porte</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Ano Início Cliente *</label>
+                                <input type="number" min="2000" max="2030" class="form-control" th:field="*{anoInicioCliente}" placeholder="2024" required>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Cidade *</label>
+                                <input type="text" class="form-control" th:field="*{localizacao.cidade}" placeholder="São Paulo" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Estado (UF) *</label>
+                                <input type="text" maxlength="2" class="form-control" th:field="*{localizacao.estado}" placeholder="SP" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Região *</label>
+                                <select class="form-select" th:field="*{localizacao.regiao}" required>
+                                    <option value="Sudeste">Sudeste</option>
+                                    <option value="Sul">Sul</option>
+                                    <option value="Nordeste">Nordeste</option>
+                                    <option value="Centro-Oeste">Centro-Oeste</option>
+                                    <option value="Norte">Norte</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Status da Conta *</label>
+                                <select class="form-select" th:field="*{statusConta}" required>
+                                    <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Segmento *</label>
-                            <input type="text" class="form-control" th:field="*{segmento}" placeholder="Ex: Tecnologia, Finanças, Varejo" required>
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3" style="border-top: 1px solid var(--hs-border);">
+                            <a th:href="@{/contas}" class="btn-hs-outline">
+                                <i class="bi bi-x-lg"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn-hs-primary">
+                                <i class="bi bi-check-lg"></i> Salvar Conta
+                            </button>
                         </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Produto Principal *</label>
-                            <input type="text" class="form-control" th:field="*{produtoPrincipal}" placeholder="Ex: Plataforma SaaS" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Porte da Empresa *</label>
-                            <select class="form-select" th:field="*{porteEmpresa}" required>
-                                <option value="Pequeno porte">Pequeno porte</option>
-                                <option value="Médio porte">Médio porte</option>
-                                <option value="Grande porte">Grande porte</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Ano Início Cliente *</label>
-                            <input type="number" min="2000" max="2030" class="form-control" th:field="*{anoInicioCliente}" placeholder="2024" required>
-                        </div>
-
-                        <div class="col-md-5">
-                            <label class="form-label">Cidade *</label>
-                            <input type="text" class="form-control" th:field="*{localizacao.cidade}" placeholder="São Paulo" required>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Estado (UF) *</label>
-                            <input type="text" maxlength="2" class="form-control" th:field="*{localizacao.estado}" placeholder="SP" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Região *</label>
-                            <select class="form-select" th:field="*{localizacao.regiao}" required>
-                                <option value="Sudeste">Sudeste</option>
-                                <option value="Sul">Sul</option>
-                                <option value="Nordeste">Nordeste</option>
-                                <option value="Centro-Oeste">Centro-Oeste</option>
-                                <option value="Norte">Norte</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Status da Conta *</label>
-                            <select class="form-select" th:field="*{statusConta}" required>
-                                <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--surface-border) !important;">
-                        <a th:href="@{/contas}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-lg"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> Salvar Conta
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        </main>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

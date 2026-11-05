@@ -4,87 +4,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anúncios — Marketing Analytics</title>
+    <title>Criativos & Anúncios &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <div th:replace="~{fragments/navbar :: sidebar('anuncios')}"></div>
 
-    <div class="container pb-5">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-            <div>
-                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
-                    <i class="bi bi-collection-play me-2" style="color: var(--brand-primary);"></i>Criativos & Anúncios
-                </h3>
-                <p class="text-muted small mb-0">Peças publicitárias vinculadas a campanhas, testes A/B e índices de qualidade</p>
-            </div>
-            <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                <a th:href="@{/anuncios/novo}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Novo Anúncio
-                </a>
-            </div>
-        </div>
+    <div class="app-content">
+        <div th:replace="~{fragments/navbar :: topbar('Criativos & Anúncios')}"></div>
 
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead>
-                    <tr>
-                        <th style="width: 50px;">ID</th>
-                        <th>Anúncio</th>
-                        <th>Campanha / Conta</th>
-                        <th>Formato</th>
-                        <th>Teste A/B</th>
-                        <th>Linha Criativa</th>
-                        <th>Nota</th>
-                        <th>Status</th>
-                        <th class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="a : ${anuncios}">
-                        <td class="text-muted small" th:text="'#' + ${a.idAnuncio}">#1</td>
-                        <td class="fw-bold text-dark" th:text="${a.nomeAnuncio}">Anúncio</td>
-                        <td>
-                            <a th:href="@{/campanhas/{id}(id=${a.campanha.idCampanha})}"
-                               class="text-decoration-none fw-semibold" style="color: var(--brand-primary);"
-                               th:text="${a.campanha.nomeCampanha}">Campanha</a>
-                            <div class="small text-muted" th:text="${a.campanha.conta.nomeConta}">Conta</div>
-                        </td>
-                        <td><span class="badge bg-light text-dark border" th:text="${a.formato}">Vídeo</span></td>
-                        <td>
-                            <span class="badge px-2" style="background-color: var(--brand-accent-soft); color: var(--brand-accent-text); font-weight: 700;"
-                                  th:text="${a.versaoTesteAb}">A</span>
-                        </td>
-                        <td th:text="${a.linhaCriativa}">Criativo</td>
-                        <td>
-                            <span class="fw-bold" style="color: var(--brand-primary);" th:text="${a.notaQualidadeCriativo}">9.0</span>
-                            <small class="text-muted">/10</small>
-                        </td>
-                        <td>
-                            <span class="status-pill"
-                                  th:classappend="${a.statusAnuncio.name() == 'ATIVO' ? 'status-ativo' : (a.statusAnuncio.name() == 'PAUSADO' ? 'status-pausado' : 'status-encerrado')}">
-                                <span class="status-dot"></span>
-                                <span th:text="${a.statusAnuncio}">STATUS</span>
-                            </span>
-                        </td>
-                        <td class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                            <a th:href="@{/anuncios/{id}/editar(id=${a.idAnuncio})}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil"></i> Editar
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <main class="p-4 flex-grow-1">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h4 class="fw-bold text-white mb-1">
+                        <i class="bi bi-collection-play-fill me-2" style="color: var(--hs-amber);"></i>Criativos & Anúncios
+                    </h4>
+                    <p class="small mb-0" style="color: var(--hs-text-muted);">
+                        Peças publicitárias vinculadas a campanhas, testes A/B e índices de qualidade (560 peças)
+                    </p>
+                </div>
+                <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                    <a th:href="@{/anuncios/novo}" class="btn-hs-primary">
+                        <i class="bi bi-plus-lg"></i> Novo Anúncio
+                    </a>
+                </div>
             </div>
-        </div>
+
+            <div class="hs-card">
+                <div class="table-responsive">
+                    <table class="table-dark-saas">
+                        <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th>Anúncio</th>
+                            <th>Campanha / Conta</th>
+                            <th>Formato</th>
+                            <th>Teste A/B</th>
+                            <th>Linha Criativa</th>
+                            <th>Nota</th>
+                            <th>Status</th>
+                            <th class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${anuncios}">
+                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${a.idAnuncio}">#1</td>
+                            <td class="fw-bold text-white" th:text="${a.nomeAnuncio}">Anúncio</td>
+                            <td>
+                                <a th:href="@{/campanhas/{id}(id=${a.campanha.idCampanha})}"
+                                   class="text-decoration-none fw-semibold" style="color: var(--hs-violet);"
+                                   th:text="${a.campanha.nomeCampanha}">Campanha</a>
+                                <div class="small" style="color: var(--hs-text-muted);" th:text="${a.campanha.conta.nomeConta}">Conta</div>
+                            </td>
+                            <td>
+                                <span class="badge" style="background-color: var(--hs-card-subtle); color: var(--hs-text-body); border: 1px solid var(--hs-border);" th:text="${a.formato}">Vídeo</span>
+                            </td>
+                            <td>
+                                <span class="badge px-2" style="background-color: rgba(245, 158, 11, 0.15); color: var(--hs-amber); font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3);"
+                                      th:text="${a.versaoTesteAb}">A</span>
+                            </td>
+                            <td style="color: var(--hs-text-muted);" th:text="${a.linhaCriativa}">Criativo</td>
+                            <td>
+                                <span class="fw-bold text-white" th:text="${a.notaQualidadeCriativo}">9.0</span>
+                                <small style="color: var(--hs-text-faint);">/10</small>
+                            </td>
+                            <td>
+                                <span class="hs-status-pill"
+                                      th:classappend="${a.statusAnuncio.name() == 'ATIVO' ? 'hs-status-ativo' : (a.statusAnuncio.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                    <span th:text="${a.statusAnuncio}">STATUS</span>
+                                </span>
+                            </td>
+                            <td class="text-end" sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                                <a th:href="@{/anuncios/{id}/editar(id=${a.idAnuncio})}" class="btn-hs-outline btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

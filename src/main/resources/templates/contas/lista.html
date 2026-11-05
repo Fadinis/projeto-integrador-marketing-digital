@@ -4,93 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contas Anunciantes — Marketing Analytics</title>
+    <title>Contas Anunciantes &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <div th:replace="~{fragments/navbar :: sidebar('contas')}"></div>
 
-    <div class="container pb-5">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-            <div>
-                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
-                    <i class="bi bi-buildings me-2" style="color: var(--brand-primary);"></i>Contas Anunciantes
-                </h3>
-                <p class="text-muted small mb-0">Carteira de clientes anunciantes, segmento de mercado e localização embutida (<code>@Embedded</code>)</p>
-            </div>
-            <div sec:authorize="hasRole('ADMIN')">
-                <a th:href="@{/contas/nova}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Nova Conta (ADMIN)
-                </a>
-            </div>
-        </div>
+    <div class="app-content">
+        <div th:replace="~{fragments/navbar :: topbar('Contas Anunciantes')}"></div>
 
-        <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 shadow-sm">
-            <i class="bi bi-check-circle-fill"></i>
-            <span th:text="${mensagemSucesso}"></span>
-        </div>
-        <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span th:text="${mensagemErro}"></span>
-        </div>
-
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead>
-                    <tr>
-                        <th style="width: 50px;">ID</th>
-                        <th>Conta Anunciante</th>
-                        <th>Segmento / Produto</th>
-                        <th>Porte</th>
-                        <th>Localização (Value Object)</th>
-                        <th>Cliente Desde</th>
-                        <th>Status</th>
-                        <th class="text-end" sec:authorize="hasRole('ADMIN')">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="ct : ${contas}">
-                        <td class="text-muted small" th:text="'#' + ${ct.idConta}">#1</td>
-                        <td class="fw-bold text-dark" th:text="${ct.nomeConta}">Conta</td>
-                        <td>
-                            <span class="fw-semibold text-secondary" th:text="${ct.segmento}">Segmento</span>
-                            <div class="small text-muted" th:text="${ct.produtoPrincipal}">Produto</div>
-                        </td>
-                        <td><span class="badge bg-light text-dark border" th:text="${ct.porteEmpresa}">Porte</span></td>
-                        <td>
-                            <div class="d-flex align-items-center gap-1">
-                                <i class="bi bi-geo-alt-fill text-danger small"></i>
-                                <span class="fw-semibold" th:text="${ct.localizacao.cidade + ' - ' + ct.localizacao.estado}">Cidade - UF</span>
-                            </div>
-                            <span class="badge px-2 mt-1" style="background-color: var(--brand-primary-soft); color: var(--brand-primary); font-size: 0.7rem;"
-                                  th:text="${ct.localizacao.regiao}">Região</span>
-                        </td>
-                        <td class="text-muted fw-semibold" th:text="${ct.anoInicioCliente}">2024</td>
-                        <td>
-                            <span class="status-pill"
-                                  th:classappend="${ct.statusConta.name() == 'ATIVO' ? 'status-ativo' : 'status-encerrado'}">
-                                <span class="status-dot"></span>
-                                <span th:text="${ct.statusConta}">STATUS</span>
-                            </span>
-                        </td>
-                        <td class="text-end" sec:authorize="hasRole('ADMIN')">
-                            <a th:href="@{/contas/{id}/editar(id=${ct.idConta})}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil"></i> Editar
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <main class="p-4 flex-grow-1">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h4 class="fw-bold text-white mb-1">
+                        <i class="bi bi-buildings-fill me-2" style="color: var(--hs-blue);"></i>Contas Anunciantes
+                    </h4>
+                    <p class="small mb-0" style="color: var(--hs-text-muted);">
+                        Carteira de clientes anunciantes, segmento de mercado e localização embutida (@Embedded Value Object)
+                    </p>
+                </div>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/contas/nova}" class="btn-hs-primary">
+                        <i class="bi bi-plus-lg"></i> Nova Conta (ADMIN)
+                    </a>
+                </div>
             </div>
-        </div>
+
+            <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 mb-4"
+                 style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; border-radius: 12px;">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-4"
+                 style="background-color: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; border-radius: 12px;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <div class="hs-card">
+                <div class="table-responsive">
+                    <table class="table-dark-saas">
+                        <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th>Conta Anunciante</th>
+                            <th>Segmento / Produto</th>
+                            <th>Porte</th>
+                            <th>Localização (Value Object)</th>
+                            <th>Cliente Desde</th>
+                            <th>Status</th>
+                            <th class="text-end" sec:authorize="hasRole('ADMIN')">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ct : ${contas}">
+                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${ct.idConta}">#1</td>
+                            <td class="fw-bold text-white" th:text="${ct.nomeConta}">Conta</td>
+                            <td>
+                                <span class="fw-semibold" style="color: var(--hs-text-body);" th:text="${ct.segmento}">Segmento</span>
+                                <div class="small" style="color: var(--hs-text-muted);" th:text="${ct.produtoPrincipal}">Produto</div>
+                            </td>
+                            <td>
+                                <span class="badge" style="background-color: var(--hs-card-subtle); color: var(--hs-text-body); border: 1px solid var(--hs-border);" th:text="${ct.porteEmpresa}">Porte</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-1 text-white">
+                                    <i class="bi bi-geo-alt-fill text-danger small"></i>
+                                    <span th:text="${ct.localizacao.cidade + ' - ' + ct.localizacao.estado}">Cidade - UF</span>
+                                </div>
+                                <span class="badge px-2 mt-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; font-size: 0.7rem; border: 1px solid rgba(139, 92, 246, 0.3);"
+                                      th:text="${ct.localizacao.regiao}">Região</span>
+                            </td>
+                            <td class="fw-semibold" style="color: var(--hs-text-muted);" th:text="${ct.anoInicioCliente}">2024</td>
+                            <td>
+                                <span class="hs-status-pill"
+                                      th:classappend="${ct.statusConta.name() == 'ATIVO' ? 'hs-status-ativo' : 'hs-status-encerrado'}">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                    <span th:text="${ct.statusConta}">STATUS</span>
+                                </span>
+                            </td>
+                            <td class="text-end" sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{/contas/{id}/editar(id=${ct.idConta})}" class="btn-hs-outline btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

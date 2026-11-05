@@ -4,131 +4,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campanhas — Marketing Analytics</title>
+    <title>Campanhas &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <div th:replace="~{fragments/navbar :: sidebar('campanhas')}"></div>
 
-    <div class="container pb-5">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-            <div>
-                <h3 class="fw-bold mb-1" style="color: var(--text-heading);">
-                    <i class="bi bi-megaphone me-2" style="color: var(--brand-primary);"></i>Gestão de Campanhas
-                </h3>
-                <p class="text-muted small mb-0">Controle de vigência, canais, orçamentos e criativos vinculados</p>
-            </div>
-            <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
-                <a th:href="@{/campanhas/nova}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Nova Campanha
-                </a>
-            </div>
-        </div>
+    <div class="app-content">
+        <div th:replace="~{fragments/navbar :: topbar('Gestão de Campanhas')}"></div>
 
-        <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 shadow-sm">
-            <i class="bi bi-check-circle-fill"></i>
-            <span th:text="${mensagemSucesso}"></span>
-        </div>
-        <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span th:text="${mensagemErro}"></span>
-        </div>
-
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead>
-                    <tr>
-                        <th style="width: 50px;">ID</th>
-                        <th>Campanha</th>
-                        <th>Conta</th>
-                        <th>Canal / Funil</th>
-                        <th>Orçamento Planejado</th>
-                        <th>Custo Real</th>
-                        <th style="min-width: 140px;">Consumo (%)</th>
-                        <th>Status</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="c : ${campanhas}">
-                        <td class="text-muted small" th:text="'#' + ${c.idCampanha}">#1</td>
-                        <td>
-                            <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-bold text-dark text-decoration-none"
-                               th:text="${c.nomeCampanha}">Nome</a>
-                            <div class="text-muted small">
-                                <i class="bi bi-calendar-event"></i>
-                                <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> até
-                                <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="fw-semibold text-secondary" th:text="${c.conta.nomeConta}">Conta</span>
-                        </td>
-                        <td>
-                            <span class="badge" style="background-color: var(--brand-primary-soft); color: var(--brand-primary); font-weight: 700;"
-                                  th:text="${c.canal}">Canal</span>
-                            <div class="small text-muted" th:text="${c.posicaoFunil}">Funil</div>
-                        </td>
-                        <td class="fw-semibold">
-                            R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
-                        </td>
-                        <td class="fw-semibold text-secondary">
-                            R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center justify-content-between mb-1">
-                                <small class="fw-bold"
-                                       th:style="${orcamentosEstourados[c.idCampanha]} ? 'color: #DC2626;' : 'color: var(--brand-primary);'"
-                                       th:text="${percentuaisOrcamento[c.idCampanha] + '%'}">0%</small>
-                                <span th:if="${orcamentosEstourados[c.idCampanha]}"
-                                      class="badge bg-danger" style="font-size: 0.65rem;">ESGOTADO</span>
-                            </div>
-                            <div class="progress-budget">
-                                <div class="progress-budget-bar"
-                                     th:classappend="${orcamentosEstourados[c.idCampanha]} ? 'overbudget' : ''"
-                                     th:style="'width: ' + (${percentuaisOrcamento[c.idCampanha]} > 100 ? 100 : ${percentuaisOrcamento[c.idCampanha]}) + '%;'"></div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="status-pill"
-                                  th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'status-pausado' : 'status-encerrado')}">
-                                <span class="status-dot"></span>
-                                <span th:text="${c.statusCampanha}">STATUS</span>
-                            </span>
-                        </td>
-                        <td class="text-end">
-                            <div class="btn-group btn-group-sm">
-                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn btn-outline-primary" title="Ver detalhes do funil">
-                                    <i class="bi bi-eye"></i> Detalhes
-                                </a>
-                                <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
-                                   th:href="@{/campanhas/{id}/editar(id=${c.idCampanha})}"
-                                   class="btn btn-outline-secondary" title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                            </div>
-                            <form sec:authorize="hasRole('ADMIN')"
-                                  th:action="@{/campanhas/{id}/excluir(id=${c.idCampanha})}"
-                                  method="post" class="d-inline ms-1"
-                                  onsubmit="return confirm('Deseja realmente excluir esta campanha?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir campanha">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <main class="p-4 flex-grow-1">
+            <!-- Header da Página -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h4 class="fw-bold text-white mb-1">
+                        <i class="bi bi-megaphone-fill me-2" style="color: var(--hs-violet);"></i>Gestão de Campanhas
+                    </h4>
+                    <p class="small mb-0" style="color: var(--hs-text-muted);">
+                        Controle de vigência, canais, orçamentos e criativos vinculados &bull; 160 campanhas na base normalizada
+                    </p>
+                </div>
+                <div sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')">
+                    <a th:href="@{/campanhas/nova}" class="btn-hs-primary">
+                        <i class="bi bi-plus-lg"></i> Nova Campanha
+                    </a>
+                </div>
             </div>
-        </div>
+
+            <!-- Alertas de Feedback -->
+            <div th:if="${mensagemSucesso}" class="alert alert-success d-flex align-items-center gap-2 py-2 mb-4"
+                 style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; border-radius: 12px;">
+                <i class="bi bi-check-circle-fill"></i>
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-4"
+                 style="background-color: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; border-radius: 12px;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span th:text="${mensagemErro}"></span>
+            </div>
+
+            <!-- Card Tabela SaaS -->
+            <div class="hs-card">
+                <div class="table-responsive">
+                    <table class="table-dark-saas">
+                        <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>Campanha</th>
+                            <th>Conta</th>
+                            <th>Canal / Funil</th>
+                            <th>Orçamento Planejado</th>
+                            <th>Custo Real</th>
+                            <th style="min-width: 150px;">Consumo (%)</th>
+                            <th>Status</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c : ${campanhas}">
+                            <td class="text-muted" style="font-family: monospace;" th:text="'#' + ${c.idCampanha}">#1</td>
+                            <td>
+                                <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="fw-bold text-white text-decoration-none"
+                                   th:text="${c.nomeCampanha}">Nome</a>
+                                <div class="small" style="color: var(--hs-text-muted);">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    <span th:text="${#temporals.format(c.dataInicio, 'dd/MM/yyyy')}"></span> até
+                                    <span th:text="${#temporals.format(c.dataFim, 'dd/MM/yyyy')}"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="fw-semibold" style="color: var(--hs-text-body);" th:text="${c.conta.nomeConta}">Conta</span>
+                            </td>
+                            <td>
+                                <span class="badge px-2 py-1" style="background-color: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); font-weight: 600;"
+                                      th:text="${c.canal}">Canal</span>
+                                <div class="small" style="color: var(--hs-text-muted);" th:text="${c.posicaoFunil}">Funil</div>
+                            </td>
+                            <td class="fw-bold text-white">
+                                R$ <span th:text="${#numbers.formatDecimal(c.orcamentoPlanejado, 1, 'POINT', 2, 'COMMA')}"></span>
+                            </td>
+                            <td class="fw-semibold" style="color: var(--hs-text-muted);">
+                                R$ <span th:text="${#numbers.formatDecimal(custosPorCampanha[c.idCampanha], 1, 'POINT', 2, 'COMMA')}"></span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <small class="fw-bold"
+                                           th:style="${orcamentosEstourados[c.idCampanha]} ? 'color: var(--hs-rose);' : 'color: var(--hs-emerald);'"
+                                           th:text="${percentuaisOrcamento[c.idCampanha] + '%'}">0%</small>
+                                    <span th:if="${orcamentosEstourados[c.idCampanha]}"
+                                          class="badge" style="background-color: rgba(244, 63, 94, 0.2); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.4); font-size: 0.65rem;">ESGOTADO</span>
+                                </div>
+                                <div class="progress" style="height: 6px; background-color: var(--hs-card-subtle); border-radius: 9999px;">
+                                    <div class="progress-bar"
+                                         th:style="'width: ' + (${percentuaisOrcamento[c.idCampanha]} > 100 ? 100 : ${percentuaisOrcamento[c.idCampanha]}) + '%; background-color: ' + (${orcamentosEstourados[c.idCampanha]} ? 'var(--hs-rose)' : 'var(--hs-emerald)') + '; border-radius: 9999px;'"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="hs-status-pill"
+                                      th:classappend="${c.statusCampanha.name() == 'ATIVO' ? 'hs-status-ativo' : (c.statusCampanha.name() == 'PAUSADO' ? 'hs-status-pausado' : 'hs-status-encerrado')}">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                    <span th:text="${c.statusCampanha}">STATUS</span>
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a th:href="@{/campanhas/{id}(id=${c.idCampanha})}" class="btn-hs-outline" title="Ver detalhes do funil">
+                                        <i class="bi bi-eye"></i> Detalhes
+                                    </a>
+                                    <a sec:authorize="hasAnyRole('ADMIN', 'GESTOR_MARKETING')"
+                                       th:href="@{/campanhas/{id}/editar(id=${c.idCampanha})}"
+                                       class="btn-hs-outline ms-1" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                                <form sec:authorize="hasRole('ADMIN')"
+                                      th:action="@{/campanhas/{id}/excluir(id=${c.idCampanha})}"
+                                      method="post" class="d-inline ms-1"
+                                      onsubmit="return confirm('Deseja realmente excluir esta campanha?');">
+                                    <button type="submit" class="btn-hs-outline text-danger" title="Excluir campanha">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

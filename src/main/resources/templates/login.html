@@ -3,85 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Marketing Analytics (ESEG)</title>
+    <title>Login &bull; Marketing Analytics (ESEG)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body class="d-flex flex-column align-items-center justify-content-center p-3"
-      style="min-height: 100vh; background: radial-gradient(circle at 50% 10%, #ECE9FE 0%, #F8F9FD 100%) !important;">
+      style="min-height: 100vh; background: radial-gradient(circle at 50% 25%, rgba(139, 92, 246, 0.14) 0%, #0E1015 75%) !important;">
 
-<div class="card shadow border-0 my-auto" style="max-width: 440px; width: 100%; border-radius: 20px !important;">
-    <div class="card-body p-4 p-md-5">
-        <div class="text-center mb-4">
-            <div class="brand-icon mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.6rem; border-radius: 14px;">
-                <i class="bi bi-graph-up-arrow"></i>
+<div class="hs-card shadow-lg my-auto" style="max-width: 440px; width: 100%; border-radius: 20px; padding: 2.25rem;">
+    <div class="text-center mb-4">
+        <div class="sidebar-logo mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.5rem; margin-bottom: 1.25rem;">
+            <i class="bi bi-graph-up-arrow text-dark"></i>
+        </div>
+        <h4 class="fw-bold text-white mb-1" style="letter-spacing: -0.02em;">Marketing Analytics</h4>
+        <p class="small mb-0" style="color: var(--hs-text-muted);">
+            Plataforma de Performance & Atribuição SaaS &bull; ESEG 2026
+        </p>
+    </div>
+
+    <div th:if="${param.erro}" class="alert alert-danger py-2 small d-flex align-items-center gap-2 mb-3"
+         style="background-color: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; border-radius: 10px;">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <span>E-mail ou senha inválidos. Tente novamente.</span>
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3"
+         style="background-color: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34D399; border-radius: 10px;">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>Sessão encerrada com sucesso.</span>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">E-mail de Acesso</label>
+            <div class="input-group">
+                <span class="input-group-text bg-transparent text-muted" style="border-color: var(--hs-border); border-right: none; border-radius: 12px 0 0 12px;">
+                    <i class="bi bi-envelope"></i>
+                </span>
+                <input type="email" id="username" name="username" class="form-control"
+                       placeholder="admin@eseg.edu.br" required autofocus style="border-left: none; border-radius: 0 12px 12px 0;">
             </div>
-            <h4 class="fw-bold mb-1" style="color: var(--text-heading); letter-spacing: -0.03em;">Marketing Analytics</h4>
-            <p class="text-muted small mb-0">Projeto Integrador Full Stack &bull; ESEG 2026</p>
         </div>
 
-        <div th:if="${param.erro}" class="alert alert-danger py-2 small d-flex align-items-center gap-2 shadow-sm">
-            <i class="bi bi-exclamation-circle-fill"></i>
-            <span>E-mail ou senha inválidos. Tente novamente.</span>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <div class="input-group">
+                <span class="input-group-text bg-transparent text-muted" style="border-color: var(--hs-border); border-right: none; border-radius: 12px 0 0 12px;">
+                    <i class="bi bi-lock"></i>
+                </span>
+                <input type="password" id="password" name="password" class="form-control"
+                       placeholder="••••••••" required style="border-left: none; border-radius: 0 12px 12px 0;">
+            </div>
         </div>
 
-        <div th:if="${param.logout}" class="alert alert-success py-2 small d-flex align-items-center gap-2 shadow-sm">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>Sessão encerrada com sucesso.</span>
-        </div>
+        <button type="submit" class="btn-hs-primary w-100 py-2 mt-3 fs-6 justify-content-center">
+            <i class="bi bi-box-arrow-in-right"></i> Entrar na Plataforma
+        </button>
+    </form>
 
-        <form th:action="@{/login}" method="post">
-            <div class="mb-3">
-                <label for="username" class="form-label">E-mail de Acesso</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px; border-color: #CBD5E1;">
-                        <i class="bi bi-envelope text-muted"></i>
-                    </span>
-                    <input type="email" id="username" name="username" class="form-control border-start-0"
-                           placeholder="admin@eseg.edu.br" required autofocus style="border-radius: 0 10px 10px 0;">
-                </div>
+    <div class="mt-4 pt-3" style="border-top: 1px solid var(--hs-border);">
+        <div class="p-3 rounded-3 small" style="background-color: var(--hs-card-subtle); border: 1px solid var(--hs-border);">
+            <div class="d-flex align-items-center gap-2 mb-2 fw-bold" style="color: var(--hs-violet);">
+                <i class="bi bi-shield-lock-fill"></i> Credenciais para Avaliação (RBAC):
             </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Senha</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px; border-color: #CBD5E1;">
-                        <i class="bi bi-lock text-muted"></i>
-                    </span>
-                    <input type="password" id="password" name="password" class="form-control border-start-0"
-                           placeholder="••••••••" required style="border-radius: 0 10px 10px 0;">
-                </div>
+            <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: var(--hs-border) !important;">
+                <span class="badge" style="background-color: rgba(244, 63, 94, 0.2); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.4);">ADMIN</span>
+                <span style="color: var(--hs-text-body); font-family: monospace;">admin@eseg.edu.br / admin123</span>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 mt-3 fs-6">
-                <i class="bi bi-box-arrow-in-right"></i> Entrar na Plataforma
-            </button>
-        </form>
-
-        <div class="mt-4 pt-3 border-top" style="border-color: var(--surface-border) !important;">
-            <div class="rounded-3 p-3 small" style="background-color: var(--brand-primary-soft); border: 1px solid rgba(108, 92, 231, 0.2);">
-                <div class="d-flex align-items-center gap-2 mb-2 fw-bold" style="color: var(--brand-primary);">
-                    <i class="bi bi-shield-lock-fill"></i> Credenciais para Avaliação (RBAC):
-                </div>
-                <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: rgba(108, 92, 231, 0.15) !important;">
-                    <span class="badge" style="background-color: #DC2626; color: #FFF;">ADMIN</span>
-                    <span class="text-dark"><code>admin@eseg.edu.br</code> / <code>admin123</code></span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: rgba(108, 92, 231, 0.15) !important;">
-                    <span class="badge" style="background-color: var(--brand-primary); color: #FFF;">GESTOR</span>
-                    <span class="text-dark"><code>gestor@eseg.edu.br</code> / <code>gestor123</code></span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center pt-1">
-                    <span class="badge" style="background-color: #059669; color: #FFF;">ANALISTA</span>
-                    <span class="text-dark"><code>analista@eseg.edu.br</code> / <code>analista123</code></span>
-                </div>
+            <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color: var(--hs-border) !important;">
+                <span class="badge" style="background-color: rgba(139, 92, 246, 0.2); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.4);">GESTOR</span>
+                <span style="color: var(--hs-text-body); font-family: monospace;">gestor@eseg.edu.br / gestor123</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-1">
+                <span class="badge" style="background-color: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4);">ANALISTA</span>
+                <span style="color: var(--hs-text-body); font-family: monospace;">analista@eseg.edu.br / analista123</span>
             </div>
         </div>
     </div>
 </div>
 
-<div class="text-center text-muted small mt-3">
-    Desenvolvido por <strong>Eduardo Marques Fadini</strong> (RA: 42721) &bull; ESEG 2026
+<div class="text-center small mt-3" style="color: var(--hs-text-muted);">
+    Desenvolvido por <strong class="text-white">Eduardo Marques Fadini</strong> (RA: 42721) &bull; ESEG 2026
 </div>
 
 </body>

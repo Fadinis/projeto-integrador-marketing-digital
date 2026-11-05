@@ -3,59 +3,94 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark navbar-custom mb-4">
-    <div class="container">
-        <a class="navbar-brand" th:href="@{/dashboard}">
-            <span class="brand-icon"><i class="bi bi-graph-up-arrow"></i></span>
-            <span>Marketing Analytics</span>
-            <span class="brand-badge">3FN</span>
+<!-- SIDEBAR VERTICAL (ESTILO HOCKEYSTACK) -->
+<aside th:fragment="sidebar(activeTab)" class="app-sidebar">
+    <a th:href="@{/dashboard}" class="sidebar-logo" title="Marketing Analytics">
+        <i class="bi bi-graph-up-arrow"></i>
+    </a>
+
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/dashboard}" class="sidebar-nav-link" th:classappend="${activeTab == 'dashboard' ? 'active' : ''}" title="Dashboard">
+                <i class="bi bi-house-door-fill"></i>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/campanhas}" class="sidebar-nav-link" th:classappend="${activeTab == 'campanhas' ? 'active' : ''}" title="Campanhas">
+                <i class="bi bi-megaphone-fill"></i>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/anuncios}" class="sidebar-nav-link" th:classappend="${activeTab == 'anuncios' ? 'active' : ''}" title="Anúncios">
+                <i class="bi bi-collection-play-fill"></i>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/contas}" class="sidebar-nav-link" th:classappend="${activeTab == 'contas' ? 'active' : ''}" title="Contas Anunciantes">
+                <i class="bi bi-buildings-fill"></i>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/h2-console}" target="_blank" class="sidebar-nav-link" title="Console do Banco H2 (sa)">
+                <i class="bi bi-database-fill"></i>
+            </a>
+        </li>
+    </ul>
+
+    <div class="sidebar-footer">
+        <a th:href="@{/dashboard}" class="sidebar-nav-link" title="Configurações">
+            <i class="bi bi-gear-fill"></i>
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <a th:href="@{/dashboard}" class="sidebar-nav-link" title="Documentação">
+            <i class="bi bi-journal-code"></i>
+        </a>
+        <div style="width: 32px; height: 1px; background-color: var(--hs-border); margin: 0.25rem 0;"></div>
+        <div class="sidebar-avatar" title="Eduardo Marques Fadini (RA 42721)">
+            EF
+        </div>
+        <form th:action="@{/logout}" method="post" class="m-0">
+            <button type="submit" class="sidebar-nav-link bg-transparent border-0 text-muted" title="Sair do Sistema">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+</aside>
 
-        <div class="collapse navbar-collapse" id="menuPrincipal">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dashboard}">
-                        <i class="bi bi-speedometer2"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/campanhas}">
-                        <i class="bi bi-megaphone"></i> Campanhas
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/anuncios}">
-                        <i class="bi bi-collection-play"></i> Anúncios
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/contas}">
-                        <i class="bi bi-buildings"></i> Contas Anunciantes
-                    </a>
-                </li>
-            </ul>
-
-            <div class="d-flex align-items-center gap-3">
-                <div class="user-pill text-light small">
-                    <i class="bi bi-person-circle fs-5" style="color: var(--brand-accent);"></i>
-                    <div>
-                        <strong sec:authentication="name" class="text-white d-block" style="line-height: 1.1;">usuario@eseg.edu.br</strong>
-                        <span class="badge px-2 py-0" style="background-color: var(--brand-accent); color: var(--brand-dark); font-size: 0.68rem; font-weight: 800;"
-                              sec:authentication="principal.authorities">ROLE</span>
-                    </div>
-                </div>
-                <form th:action="@{/logout}" method="post" class="m-0">
-                    <button type="submit" class="btn btn-outline-light btn-sm" title="Encerrar sessão">
-                        <i class="bi bi-box-arrow-right"></i> Sair
-                    </button>
-                </form>
+<!-- TOPBAR SUPERIOR (ESTILO HOCKEYSTACK) -->
+<header th:fragment="topbar(pageTitle)" class="app-topbar">
+    <div class="user-welcome-box">
+        <div class="user-welcome-avatar">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <h6 class="fw-bold text-white mb-0" th:text="${pageTitle != null ? pageTitle : 'Eduardo Marques Fadini'}">Eduardo Marques Fadini</h6>
+                <span class="badge px-2 py-0" style="background-color: var(--hs-violet); color: #FFF; font-size: 0.68rem; font-weight: 800;"
+                      sec:authentication="principal.authorities">ROLE</span>
             </div>
+            <div class="small" style="color: var(--hs-text-muted);">Bem-vindo de volta ao Marketing Analytics 👋</div>
         </div>
     </div>
-</nav>
+
+    <div class="topbar-actions">
+        <a th:href="@{/dashboard}" class="topbar-icon-btn" title="Pesquisar">
+            <i class="bi bi-search"></i>
+        </a>
+        <div class="topbar-icon-btn" title="Notificações">
+            <i class="bi bi-bell"></i>
+            <span class="badge-dot"></span>
+        </div>
+        <div class="topbar-btn">
+            <i class="bi bi-calendar3" style="color: var(--hs-text-muted);"></i>
+            <span>Base 2024 - 2025</span>
+            <i class="bi bi-chevron-down small" style="color: var(--hs-text-muted);"></i>
+        </div>
+        <div class="topbar-btn">
+            <i class="bi bi-check2-circle" style="color: var(--hs-emerald);"></i>
+            <span>31.314 Registros 3FN</span>
+        </div>
+    </div>
+</header>
 
 </body>
 </html>

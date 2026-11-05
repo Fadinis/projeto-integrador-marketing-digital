@@ -3,127 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Campanha — Marketing Analytics</title>
+    <title>Formulário de Campanha &bull; Marketing Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/custom.css(v=2.0)}">
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="app-container">
+    <div th:replace="~{fragments/navbar :: sidebar('campanhas')}"></div>
 
-    <div class="container pb-5" style="max-width: 840px;">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex align-items-center gap-2">
-                <i class="bi bi-pencil-square text-primary fs-5"></i>
-                <h5 class="fw-bold mb-0" style="color: var(--text-heading);"
-                    th:text="${campanha.idCampanha == null ? 'Nova Campanha de Marketing' : 'Editar Campanha #' + campanha.idCampanha}">Campanha</h5>
-            </div>
-            <div class="card-body p-4 p-md-4">
+    <div class="app-content">
+        <div th:replace="~{fragments/navbar :: topbar(${campanha.idCampanha == null ? 'Nova Campanha' : 'Editar Campanha'})}"></div>
 
-                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 shadow-sm mb-4">
+        <main class="p-4 flex-grow-1 d-flex justify-content-center">
+            <div style="width: 100%; max-width: 880px;">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1"
+                            th:text="${campanha.idCampanha == null ? 'Nova Campanha de Marketing' : 'Editar Campanha #' + campanha.idCampanha}">Campanha</h4>
+                        <p class="small mb-0" style="color: var(--hs-text-muted);">Preencha os campos para planejamento de canais e conformidade com limites de orçamento (RF05)</p>
+                    </div>
+                    <a th:href="@{/campanhas}" class="btn-hs-outline">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+                </div>
+
+                <div th:if="${mensagemErro}" class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-4"
+                     style="background-color: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); color: #FB7185; border-radius: 12px;">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <span th:text="${mensagemErro}"></span>
                 </div>
 
-                <form th:action="@{/campanhas/salvar}" th:object="${campanha}" method="post">
-                    <input type="hidden" th:field="*{idCampanha}">
+                <div class="hs-card">
+                    <form th:action="@{/campanhas/salvar}" th:object="${campanha}" method="post">
+                        <input type="hidden" th:field="*{idCampanha}">
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Conta Anunciante *</label>
-                            <select class="form-select" th:field="*{conta.idConta}" required>
-                                <option value="">Selecione uma conta...</option>
-                                <option th:each="ct : ${contas}"
-                                        th:value="${ct.idConta}"
-                                        th:text="${ct.nomeConta + ' (' + ct.statusConta + ')'}"></option>
-                            </select>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('conta')}" th:errors="*{conta}"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Conta Anunciante *</label>
+                                <select class="form-select" th:field="*{conta.idConta}" required>
+                                    <option value="">Selecione uma conta...</option>
+                                    <option th:each="ct : ${contas}"
+                                            th:value="${ct.idConta}"
+                                            th:text="${ct.nomeConta + ' (' + ct.statusConta + ')'}"></option>
+                                </select>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('conta')}" th:errors="*{conta}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Nome da Campanha *</label>
+                                <input type="text" class="form-control" th:field="*{nomeCampanha}" placeholder="Ex: Black Friday 2026 - Conversão" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('nomeCampanha')}" th:errors="*{nomeCampanha}"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Canal de Divulgação *</label>
+                                <input type="text" class="form-control" th:field="*{canal}" placeholder="Ex: Google Ads, Meta Ads" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('canal')}" th:errors="*{canal}"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Objetivo *</label>
+                                <input type="text" class="form-control" th:field="*{objetivo}" placeholder="Ex: Vendas, Leads, Branding" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('objetivo')}" th:errors="*{objetivo}"></div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Posição no Funil *</label>
+                                <select class="form-select" th:field="*{posicaoFunil}" required>
+                                    <option value="Topo de funil">Topo de funil (Consciência)</option>
+                                    <option value="Meio de funil">Meio de funil (Consideração)</option>
+                                    <option value="Fundo de funil">Fundo de funil (Conversão)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Segmento *</label>
+                                <input type="text" class="form-control" th:field="*{segmento}" placeholder="Ex: E-commerce, B2B" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Produto / Serviço *</label>
+                                <input type="text" class="form-control" th:field="*{produto}" placeholder="Ex: Curso Online, Assinatura" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Abrangência Geográfica *</label>
+                                <input type="text" class="form-control" th:field="*{abrangenciaGeografica}" placeholder="Ex: Nacional, Sudeste" required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Data de Início *</label>
+                                <input type="date" class="form-control" th:field="*{dataInicio}" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('dataInicio')}" th:errors="*{dataInicio}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Data de Fim *</label>
+                                <input type="date" class="form-control" th:field="*{dataFim}" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('dataFim')}" th:errors="*{dataFim}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Orçamento Planejado (R$) *</label>
+                                <input type="number" step="0.01" min="0" class="form-control" th:field="*{orcamentoPlanejado}" placeholder="5000.00" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('orcamentoPlanejado')}" th:errors="*{orcamentoPlanejado}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Status *</label>
+                                <select class="form-select" th:field="*{statusCampanha}" required>
+                                    <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Nome da Campanha *</label>
-                            <input type="text" class="form-control" th:field="*{nomeCampanha}" placeholder="Ex: Black Friday 2026 - Conversão" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('nomeCampanha')}" th:errors="*{nomeCampanha}"></div>
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3" style="border-top: 1px solid var(--hs-border);">
+                            <a th:href="@{/campanhas}" class="btn-hs-outline">
+                                <i class="bi bi-x-lg"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn-hs-primary">
+                                <i class="bi bi-check-lg"></i> Salvar Campanha
+                            </button>
                         </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Canal de Divulgação *</label>
-                            <input type="text" class="form-control" th:field="*{canal}" placeholder="Ex: Google Ads, Meta Ads" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('canal')}" th:errors="*{canal}"></div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Objetivo *</label>
-                            <input type="text" class="form-control" th:field="*{objetivo}" placeholder="Ex: Vendas, Leads, Branding" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('objetivo')}" th:errors="*{objetivo}"></div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Posição no Funil *</label>
-                            <select class="form-select" th:field="*{posicaoFunil}" required>
-                                <option value="Topo de funil">Topo de funil (Consciência)</option>
-                                <option value="Meio de funil">Meio de funil (Consideração)</option>
-                                <option value="Fundo de funil">Fundo de funil (Conversão)</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Segmento *</label>
-                            <input type="text" class="form-control" th:field="*{segmento}" placeholder="Ex: E-commerce, B2B" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Produto / Serviço *</label>
-                            <input type="text" class="form-control" th:field="*{produto}" placeholder="Ex: Curso Online, Assinatura" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Abrangência Geográfica *</label>
-                            <input type="text" class="form-control" th:field="*{abrangenciaGeografica}" placeholder="Ex: Nacional, Sudeste" required>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Data de Início *</label>
-                            <input type="date" class="form-control" th:field="*{dataInicio}" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('dataInicio')}" th:errors="*{dataInicio}"></div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Data de Fim *</label>
-                            <input type="date" class="form-control" th:field="*{dataFim}" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('dataFim')}" th:errors="*{dataFim}"></div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Orçamento Planejado (R$) *</label>
-                            <input type="number" step="0.01" min="0" class="form-control" th:field="*{orcamentoPlanejado}" placeholder="5000.00" required>
-                            <div class="text-danger small" th:if="${#fields.hasErrors('orcamentoPlanejado')}" th:errors="*{orcamentoPlanejado}"></div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Status *</label>
-                            <select class="form-select" th:field="*{statusCampanha}" required>
-                                <option th:each="st : ${statusOpcoes}" th:value="${st}" th:text="${st}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--surface-border) !important;">
-                        <a th:href="@{/campanhas}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-lg"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> Salvar Campanha
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        </main>
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-
-<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
